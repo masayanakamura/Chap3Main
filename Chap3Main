@@ -1,99 +1,206 @@
-package Chap3Main;
+package kaken;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
 
-import java.applet.Applet;
-import java.applet.AudioClip;
+import java.applet.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.BufferedImage;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.StreamTokenizer;
 import java.util.Random;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
-
-public class Chap3Main extends JFrame {
-	//private static final long serialVersionUID = 1L;
+public class Chap3Main{
 	int h=0,i=30;
 	int mapx=0,mapy=0;
-	JFrame mainwindow;
-	BufferedImage img_back, chara,chara2,msg;
-	AudioClip bgm,se;
-	//PrefFrame frm2 = new PrefFrame("メッセージウィンドウ");
 	ivent iv = new ivent();
+	JFrame mainwindow,BOSS;
+	BufferedImage charaf,charab,charal,charar,tekif,tekib,danu,dana,danl,danr;
+	BufferedImage sord1,sord2,sord3,move,nomove,HASIGO,Hrec,Grec,ana,tuta,Key,Tsord,Keria,bur;
+	BufferedImage charafl,charafr,charabl,charabr,charall,charalr,chararl,chararr,a;
+	BufferedImage[] HP=new BufferedImage[11];
+	AudioClip bgm,se,se2;
+	
+	//UP=1 DOWN=2 LEFT=3 RIGHT=4
+	bunki11 i1 = new bunki11();
+	bunki12 i2 = new bunki12();
+	bunki13 i3 = new bunki13();
+	bunki14 i4 = new bunki14();
+	bunki15 i5 = new bunki15();
+	bunki16 i6 = new bunki16();
+	bunki17 i7 = new bunki17();
+	bunki18 i8 = new bunki18();
+	bunki19 i9 = new bunki19();
+	bunki21 i10 = new bunki21();
+	bunki22 i20 = new bunki22();
+	bunki23 i30 = new bunki23();
+	bunki24 i40 = new bunki24();
+	bunki25 i50 = new bunki25();
+	bunki26 i60 = new bunki26();
+	bunki27 i70 = new bunki27();
+	bunki28 i80 = new bunki28();
+	bunki29 i90 = new bunki29();
+	bunki30 iBOSS = new bunki30();
 	
 	public static void main(String[] args) {
-		new Chap3Main();
+		new Chap3Main();	
 	}
 	
-	/*********************** ウィンドウ設定 ***********************/
+	//コンストラクタ
 	public Chap3Main(){
-		this.mainwindow = new JFrame("ゲームウィンドウ");
+		 this.mainwindow = new JFrame("ゲームウィンドウ");
+		
 		this.mainwindow.
 			setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		this.mainwindow.setVisible(true);
 		this.mainwindow.setResizable(false);
-		this.mainwindow.setLocation(200,100);
 		
-	    mainwindow.setVisible(true);
-	    
 		//ウィンドウサイズ
 		Insets in = this.mainwindow.getInsets();
 		this.mainwindow.setSize(1000+ in.left + in.right , 700 +in.top + in.bottom);
 		//キーボード
 		this.mainwindow.addKeyListener(new test());
-		
-		//BGm,SE準備
-		bgm=Applet.newAudioClip(getClass().getResource("tamhe10.mid"));
-		se=Applet.newAudioClip(getClass().getResource("tama2.au"));
-		
-		/************************** 音楽 *****************************/
-		bgm.loop();
-		
+		this.mainwindow.addWindowListener(new WindowListenerTest());
+		//音楽
+		//bgm=Applet.newAudioClip(getClass().getResource("force_your_way.mid"));
+		//se=Applet.newAudioClip(getClass().getResource("封印されしもの.mid"));
+		//se2=Applet.newAudioClip(getClass().getResource("はるかなる故郷.mid"));
+		//bgm.loop();
 	    //画像
 		try{
-			this.chara = ImageIO.read(this.getClass().getResource
+			charaf = ImageIO.read(this.getClass().getResource
 					("主人公表面.gif"));
+			charab = ImageIO.read(this.getClass().getResource
+					("主人公裏面.gif"));
+			charal = ImageIO.read(this.getClass().getResource
+					("主人公左向き.gif"));
+			charar = ImageIO.read(this.getClass().getResource
+					("主人公右向き.gif"));
+			tekif = ImageIO.read(this.getClass().getResource
+					("敵1.gif"));
+			tekib = ImageIO.read(this.getClass().getResource
+					("敵1裏.gif"));
+			danu = ImageIO.read(this.getClass().getResource
+					("攻撃１下.gif"));
+			danr = ImageIO.read(this.getClass().getResource
+					("攻撃１右.gif"));
+			danl = ImageIO.read(this.getClass().getResource
+					("攻撃１左.gif"));
+			dana = ImageIO.read(this.getClass().getResource
+					("攻撃１上.gif"));
+			sord1 = ImageIO.read(this.getClass().getResource
+					("剣攻撃右１.gif"));
+			sord2 = ImageIO.read(this.getClass().getResource
+					("剣攻撃右１－２.gif"));
+			sord3 = ImageIO.read(this.getClass().getResource
+					("剣攻撃右１－３.gif"));
+			move = ImageIO.read(this.getClass().getResource
+					("歩行可能パネル４.gif"));
+			nomove = ImageIO.read(this.getClass().getResource
+					("歩行不可能パネル３.gif"));
+			HASIGO = ImageIO.read(this.getClass().getResource
+					("はしご.gif"));
+			Hrec = ImageIO.read(this.getClass().getResource
+					("HP回復アイテム１.gif"));
+			Grec = ImageIO.read(this.getClass().getResource
+					("元気回復アイテム１.gif"));
+			ana = ImageIO.read(this.getClass().getResource
+					("穴.gif"));
+			tuta = ImageIO.read(this.getClass().getResource
+					("蔦壁.gif"));
+			Key = ImageIO.read(this.getClass().getResource
+					("２.gif"));
+			Tsord = ImageIO.read(this.getClass().getResource
+					("３.gif"));
+			Keria = ImageIO.read(this.getClass().getResource
+					("４.gif"));
+			bur = ImageIO.read(this.getClass().getResource
+					("５.gif"));
+			charafl = ImageIO.read(this.getClass().getResource
+					("主人公表面左足出し.gif"));
+			charafr = ImageIO.read(this.getClass().getResource
+					("主人公表面右足出し.gif"));
+			charabl = ImageIO.read(this.getClass().getResource
+					("主人公裏面左足出し.gif"));
+			charabr = ImageIO.read(this.getClass().getResource
+					("主人公裏面右足出し.gif"));
+			charall = ImageIO.read(this.getClass().getResource
+					("主人公左向き足左振り.gif"));
+			charalr = ImageIO.read(this.getClass().getResource
+					("主人公左向き足右振り.gif"));
+			chararl = ImageIO.read(this.getClass().getResource
+					("主人公右向き足開き.gif"));
+			chararr = ImageIO.read(this.getClass().getResource
+					("主人公右向き足左振り.gif"));
+			
+			HP[10]=ImageIO.read(this.getClass().getResource("HPバー100%2.gif"));
+			HP[9]=ImageIO.read(this.getClass().getResource("HPバー90%2.gif"));
+			HP[8]=ImageIO.read(this.getClass().getResource("HPバー80%2.gif"));
+			HP[7]=ImageIO.read(this.getClass().getResource("HPバー70%2.gif"));
+			HP[6]=ImageIO.read(this.getClass().getResource("HPバー60%2.gif"));
+			HP[5]=ImageIO.read(this.getClass().getResource("HPバー50%2.gif"));
+			HP[4]=ImageIO.read(this.getClass().getResource("HPバー40%2.gif"));
+			HP[3]=ImageIO.read(this.getClass().getResource("HPバー30%2.gif"));
+			HP[2]=ImageIO.read(this.getClass().getResource("HPバー20%2.gif"));
+			HP[1]=ImageIO.read(this.getClass().getResource("HPバー10%2.gif"));
+			HP[0]=ImageIO.read(this.getClass().getResource("HPバー0%2.gif"));
+			a=ImageIO.read(this.getClass().getResource("bg.png"));
+			
+					
 		}catch(IOException e){e.printStackTrace();}
 		
 		mapmake map = new mapmake();
 		for(mapy=30;mapy <=  730-70;mapy+=70){
 			for(mapx=0;mapx <=  700-70;mapx+=70){	
-				map.mapmk(mapx,mapy,h,i,0,0,0);
+				map.mapmk(mapx,mapy,h,i,0,0,0,0);
 			}
 		}
-		//ivent msg = new ivent();
-		
 		Graphics g1 = mainwindow.getGraphics();
-		g1.drawImage(chara,210,240,70,70,mainwindow);
+		g1.drawImage(charaf,210,240,70,70,mainwindow);
+		g1.drawImage(ana,700,500,300,300,mainwindow);
+		g1.drawImage(HP[10],726,630,240,80,mainwindow);
+		g1.drawImage(a,726,540,100,100,mainwindow);
+		
 		iv.messege(g1);
-		
-	}	
-	
+	}
+
+
 	@SuppressWarnings("serial")
-	/*************************** キーボードの処理 ****************************/
-	 class test extends Applet implements KeyListener{
-		int handan,x6,y6;
+	class test extends Applet implements KeyListener{
+		int handan,x6,y6,count=0;
 		 int x=210, y=240,x2,y2,x4,y4,i=0,j=330,hk=0,MAPnow=1;
-		 int tekix=350,tekiy=100,tekix2,tekiy2;
-		 BufferedImage  chara2,chara;
-		private boolean isQ = false;
-		private boolean isUP = false;
-		private boolean isDOWN = false;
-		private boolean isLEFT = false;
-		private boolean isRIGHT = false;
+		 int tekix=0,tekiy=0,tekix2,tekiy2;
+		 int teki2x=0,teki2y=0,teki2x2,teki2y2;
+		 int teki3x=0,teki3y=0,teki3x2,teki3y2;
+		 int teki4x=0,teki4y=0,teki4x2,teki4y2;
+		 int Myx,Myy,cp,cp2,cp3,cp4;
+		 int tekiHP1=100,tekiHP2=100,tekiHP3=100,tekiHP4=100,MyHP=100;
+		 int wool1=0,wool2=0,wool3=0,wool4=0;
+		 int kaidan=0,Aria_Change=0;
+		 int turn1=0,turn2=0,turn3=0,turn4=0;
 		
-	/*************************** キーボードの監視 ************************/
-		public void ini(){
-			addKeyListener(this);
-		}
-		 
-	/**************************** キーボードが押された場合の処理  **************************/
+		// JFrame mainwindow = new JFrame();
+		 	private boolean isQ = false;
+			private boolean isUP = false;
+			private boolean isDOWN = false;
+			private boolean isLEFT = false;
+			private boolean isRIGHT = false;
+		 /* x,yは自分の座標、x2,y2は前の座標,x4,y4はマップ特定のため、x6,y6はまだ使ってないと思われ*/
+		 BufferedImage  chara2,chara;
 			@Override
 			public void keyPressed(KeyEvent arg0){
-	/**************************キー状態（true）  ***************************/
+				
+				/**************************キー状態（true）  ***************************/
 				switch(arg0.getKeyCode() ){
-				case KeyEvent.VK_Q:
+				case KeyEvent.VK_SHIFT:
 					isQ=true;
 					break;
 				case KeyEvent.VK_UP:
@@ -113,15 +220,15 @@ public class Chap3Main extends JFrame {
 				if(isQ==true&&isDOWN){System.out.println("DOWN");hk=2;}
 				if(isQ==true&&isLEFT){System.out.println("LEFT");hk=3;}
 				if(isQ==true&&isRIGHT){System.out.println("RIGHT");hk=4;}
-			
-			}
-	/************************* キーボードが離された場合の処理************************/
-			@Override
-			public void keyReleased(KeyEvent arg0){
 				
-	/************************* キー状態(false) ***********************/
+			}
+	
+			@Override
+			
+			public void keyReleased(KeyEvent arg0){
+				/************************* キー状態(false) ***********************/
 				switch(arg0.getKeyCode()){
-			 		case KeyEvent.VK_Q:
+			 		case KeyEvent.VK_SHIFT:
 			 			isQ=false;
 			 			break;
 			 		case KeyEvent.VK_UP:
@@ -138,15 +245,15 @@ public class Chap3Main extends JFrame {
 			 			break;
 				}
 			if(isQ!=true){
-			/********************* 主人公の行動 ********************/
 				switch(arg0.getKeyCode() ){
 				case KeyEvent.VK_UP:
 					x2=x;
 					y2=y;
 					x6=x4;
 					y6=y4;
-					tekix2=tekix;
-					tekiy2=tekiy;
+					turn1++;
+					Aria_Change=0;
+					if(turn1>2)turn1=1;
 					
 					if(i==0){
 					y-=70;
@@ -162,76 +269,88 @@ public class Chap3Main extends JFrame {
 						y4 = y % 730;	
 						y4+=30;
 						}
-					bunki11 i1 = new bunki11();
-					bunki12 i2 = new bunki12();
-					bunki13 i3 = new bunki13();
-					bunki14 i4 = new bunki14();
-					bunki15 i5 = new bunki15();
-					bunki16 i6 = new bunki16();
-					bunki17 i7 = new bunki17();
-					bunki18 i8 = new bunki18();
-					bunki19 i9 = new bunki19();
-				
-					switch(MAPnow){
-					case 1:handan = i1.mapbnk(x4,y4);break;
-					case 2:handan = i2.mapbnk(x4,y4);break;
-					case 3:handan = i3.mapbnk(x4,y4);break;
-					case 4:handan = i4.mapbnk(x4,y4);break;
-					case 5:handan = i5.mapbnk(x4,y4);break;
-					case 6:handan = i6.mapbnk(x4,y4);break;
-					case 7:handan = i7.mapbnk(x4,y4);break;
-					case 8:handan = i8.mapbnk(x4,y4);break;
-					case 9:handan = i9.mapbnk(x4,y4);break;
+					}
+					if(kaidan==0){
+						switch(MAPnow){
+							case 1:handan = i1.mapbnk(x4,y4);break;
+							case 2:handan = i2.mapbnk(x4,y4);break;
+							case 3:handan = i3.mapbnk(x4,y4);break;
+							case 4:handan = i4.mapbnk(x4,y4);break;
+							case 5:handan = i5.mapbnk(x4,y4);break;
+							case 6:handan = i6.mapbnk(x4,y4);break;
+							case 7:handan = i7.mapbnk(x4,y4);break;
+							case 8:handan = i8.mapbnk(x4,y4);break;
+							case 9:handan = i9.mapbnk(x4,y4);break;
+						}
+					}else if(kaidan==1){
+						switch(MAPnow){
+							case 1:handan = i10.mapbnk(x4,y4);break;
+							case 2:handan = i20.mapbnk(x4,y4);break;
+							case 3:handan = i30.mapbnk(x4,y4);break;
+							case 4:handan = i40.mapbnk(x4,y4);break;
+							case 5:handan = i50.mapbnk(x4,y4);break;
+							case 6:handan = i60.mapbnk(x4,y4);break;
+							case 7:handan = i70.mapbnk(x4,y4);break;
+							case 8:handan = i80.mapbnk(x4,y4);break;
+							case 9:handan = i90.mapbnk(x4,y4);break;
+						}
+					}else if(kaidan==2){
+						handan=iBOSS.mapbnk(x4,y4);
 					}
 						
 					maphandan MAP = new maphandan();
 					int rizardon = MAP.maphndn(x,y);
-					mapmake map = new mapmake();
 					move test5 = new move();
+					System.out.println("x4 "+x4+" tekix "+tekix+" y4 "+y4+" tekiy "+tekiy);
 					if(handan!=1){
-						hk=1;				
+						hk=1;
+						if(handan==5){kaidan=1;
+							//bgm.stop();
+							//se.loop();
+							Aria_Change=1;
+							Repaint paint = new Repaint();
+							paint.repaint(x,y,MAPnow,kaidan);
+			
+						}else if(kaidan==1&&handan==5){kaidan=2;
+							//se.stop();
+							//se2.loop();
+						Aria_Change=1;
+							Repaint paint = new Repaint();
+								paint.repaint(x,y,MAPnow,kaidan);
+						}
 						if(MAPnow != rizardon){
-							for(mapy=30;mapy <=  730-70;mapy+=70){
-								for(mapx=0;mapx <=  700-70;mapx+=70){	
-									map.mapmk(mapx,mapy,x,y,MAPnow,0,0);
-								}
-							}
+							Aria_Change=1;
+							Repaint paint = new Repaint();
+							paint.repaint(x,y,MAPnow,kaidan);
+							
 						}
-						MAPnow=test5.move2(x,y,x2,y2,hk,MAPnow,rizardon);
-					}else {if(MAPnow != rizardon){
-						for(mapy=30;mapy <=  730-70;mapy+=70){
-							for(mapx=0;mapx <=  700-70;mapx+=70){	
-								map.mapmk(mapx,mapy,x,y,MAPnow,0,0);
-							}
+						if((x4==tekix&&y4==tekiy)||(x4==teki2x&&y4==teki2y)||(x4==teki3x&&y4==teki3y)||(x4==teki4x&&y4==teki4y)){
+							y+=70;
 						}
-						MAPnow=test5.move2(x,y,x2,y2,hk,MAPnow,rizardon);
+						else MAPnow=test5.move2(x,y,x2,y2,hk,MAPnow,rizardon,turn1);
+						
+					}else{
+						if(MAPnow != rizardon){
+							Aria_Change=1;
+						Repaint paint = new Repaint();
+						paint.repaint(x,y,MAPnow,kaidan);
+						
+						MAPnow=test5.move2(x,y,x2,y2,hk,MAPnow,rizardon,turn1);
 						y-=70;
-					}y+=70;}
-				//	System.out.println(x4+" "+y4+" "+x6+" "+y6);
-						Random rnd = new Random();
-				        int cp = rnd.nextInt(4) + 1;
-				        if(cp==1)tekix+=70;
-				        if(cp==2)tekix-=70;
-				        if(cp==3)tekiy+=70;
-				        if(cp==4)tekiy-=70;
-				        if(tekix < 0) tekix+=70;
-			        	if(tekix > 2030) tekix+=70;
-			        	if(tekiy < 0) tekiy+=70;
-			        	if(tekiy > 2060) tekiy-=70;
-						teki teki2 = new teki();
-						teki2.a(tekix,tekiy,tekix2,tekiy2,cp,MAPnow);
 					}
-				}
-		
+						y+=70;  
+					}
+					}				
 					break;
 				case KeyEvent.VK_DOWN:
 					x2=x;
 					y2=y;
 					x6=x4;
 					y6=y4;
-					tekix2=tekix;
-					tekiy2=tekiy;
-					
+					turn2++;
+					Aria_Change=0;
+					if(turn2>2)turn2=1;
+					System.out.println("aaaaaa "+turn2);
 					if(i==0){
 						y+=70;
 						if(y > 2060){
@@ -246,78 +365,84 @@ public class Chap3Main extends JFrame {
 							else if(y4 >= 730){
 								y4 = y % 730;	
 								y4+=30;}
-						
-							bunki11 i1 = new bunki11();
-							bunki12 i2 = new bunki12();
-							bunki13 i3 = new bunki13();
-							bunki14 i4 = new bunki14();
-							bunki15 i5 = new bunki15();
-							bunki16 i6 = new bunki16();
-							bunki17 i7 = new bunki17();
-							bunki18 i8 = new bunki18();
-							bunki19 i9 = new bunki19();
-						
-							
-							switch(MAPnow){
-							case 1:handan = i1.mapbnk(x4,y4);break;
-							case 2:handan = i2.mapbnk(x4,y4);break;
-							case 3:handan = i3.mapbnk(x4,y4);break;
-							case 4:handan = i4.mapbnk(x4,y4);break;
-							case 5:handan = i5.mapbnk(x4,y4);break;
-							case 6:handan = i6.mapbnk(x4,y4);break;
-							case 7:handan = i7.mapbnk(x4,y4);break;
-							case 8:handan = i8.mapbnk(x4,y4);break;
-							case 9:handan = i9.mapbnk(x4,y4);break;
+			
+							if(kaidan==0){
+								switch(MAPnow){
+									case 1:handan = i1.mapbnk(x4,y4);break;
+									case 2:handan = i2.mapbnk(x4,y4);break;
+									case 3:handan = i3.mapbnk(x4,y4);break;
+									case 4:handan = i4.mapbnk(x4,y4);break;
+									case 5:handan = i5.mapbnk(x4,y4);break;
+									case 6:handan = i6.mapbnk(x4,y4);break;
+									case 7:handan = i7.mapbnk(x4,y4);break;
+									case 8:handan = i8.mapbnk(x4,y4);break;
+									case 9:handan = i9.mapbnk(x4,y4);break;
+								}
+							}else if(kaidan==1){
+								switch(MAPnow){
+									case 1:handan = i10.mapbnk(x4,y4);break;
+									case 2:handan = i20.mapbnk(x4,y4);break;
+									case 3:handan = i30.mapbnk(x4,y4);break;
+									case 4:handan = i40.mapbnk(x4,y4);break;
+									case 5:handan = i50.mapbnk(x4,y4);break;
+									case 6:handan = i60.mapbnk(x4,y4);break;
+									case 7:handan = i70.mapbnk(x4,y4);break;
+									case 8:handan = i80.mapbnk(x4,y4);break;
+									case 9:handan = i90.mapbnk(x4,y4);break;
+								}
+							}else if(kaidan==2){
+								handan=iBOSS.mapbnk(x4,y4);
 							}
 							maphandan MAP = new maphandan();
 							int rizardon = MAP.maphndn(x,y);
-							mapmake map = new mapmake();
 							move test6 = new move();
-						if(handan!=1){
-							hk=2;
-							if(MAPnow != rizardon){
-								for(mapy=30;mapy <=  730-70;mapy+=70){
-									for(mapx=0;mapx <=  700-70;mapx+=70){	
-										map.mapmk(mapx,mapy,x,y,MAPnow,0,0);
-									}
+							if(handan!=1){
+								
+								hk=2;
+								if(handan==5){kaidan=1;
+									//bgm.stop();
+									//se.loop();
+								Aria_Change=1;
+									Repaint paint = new Repaint();
+									paint.repaint(x,y,MAPnow,kaidan);
+								}else if(kaidan==1&&handan==5){kaidan=2;
+									//se.stop();
+									//se2.loop();
+								Aria_Change=1;
+									Repaint paint = new Repaint();
+									paint.repaint(x,y,MAPnow,kaidan);
 								}
-							}
-						
-							MAPnow=test6.move2(x,y,x2,y2,hk,MAPnow,rizardon);
-						
-						}else {if(MAPnow != rizardon){
-							for(mapy=30;mapy <=  730-70;mapy+=70){
-								for(mapx=0;mapx <=  700-70;mapx+=70){	
-									map.mapmk(mapx,mapy,x,y,MAPnow,0,0);
+								
+								if(MAPnow != rizardon){
+									Aria_Change=1;
+									Repaint paint = new Repaint();
+									paint.repaint(x,y,MAPnow,kaidan);
+									
 								}
-							}
-							
-							MAPnow=test6.move2(x,y,x2,y2,hk,MAPnow,rizardon);
-							y+=70;
-						}y-=70;}			
+								if((x4==tekix&&y4==tekiy)||(x4==teki2x&&y4==teki2y)||(x4==teki3x&&y4==teki3y)||(x4==teki4x&&y4==teki4y)){
+									y-=70;
+								}
+								else
+								MAPnow=test6.move2(x,y,x2,y2,hk,MAPnow,rizardon,turn2);						
+								}else {if(MAPnow != rizardon){
+									Aria_Change=1;
+									Repaint paint = new Repaint();
+									paint.repaint(x,y,MAPnow,kaidan);
+									MAPnow=test6.move2(x,y,x2,y2,hk,MAPnow,rizardon,turn2);
+									y+=70;
+								}y-=70;}
 					
-							Random rnd = new Random();
-					        int cp = rnd.nextInt(4) + 1;
-					        if(cp==1)tekix+=70;
-					        if(cp==2)tekix-=70;
-					        if(cp==3)tekiy+=70;
-					        if(cp==4)tekiy-=70;
-					        if(tekix < 0) tekix+=70;
-				        	if(tekix > 2030) tekix+=70;
-				        	if(tekiy < 0) tekiy+=70;
-				        	if(tekiy > 2060) tekiy-=70;
-							teki teki2 = new teki();
-							teki2.a(tekix,tekiy,tekix2,tekiy2,cp,MAPnow);
+							}
 						}
-					}
 					break;
 				case KeyEvent.VK_LEFT:
 					x2=x;
 					y2=y;
 					x6=x4;
 					y6=y4;
-					tekix2=tekix;
-					tekiy2=tekiy;
+					turn3++;
+					Aria_Change=0;
+					if(turn3>2)turn3=1;
 					if(i==0){
 						x-=70;
 						if(x < 0){
@@ -331,71 +456,76 @@ public class Chap3Main extends JFrame {
 						else if(y4 >= 730){
 							y4 = y % 730;	
 							y4+=30;}
-						
-						bunki11 i1 = new bunki11();
-						bunki12 i2 = new bunki12();
-						bunki13 i3 = new bunki13();
-						bunki14 i4 = new bunki14();
-						bunki15 i5 = new bunki15();
-						bunki16 i6 = new bunki16();
-						bunki17 i7 = new bunki17();
-						bunki18 i8 = new bunki18();
-						bunki19 i9 = new bunki19();
-					
-						switch(MAPnow){
-						case 1:handan = i1.mapbnk(x4,y4);break;
-						case 2:handan = i2.mapbnk(x4,y4);break;
-						case 3:handan = i3.mapbnk(x4,y4);break;
-						case 4:handan = i4.mapbnk(x4,y4);break;
-						case 5:handan = i5.mapbnk(x4,y4);break;
-						case 6:handan = i6.mapbnk(x4,y4);break;
-						case 7:handan = i7.mapbnk(x4,y4);break;
-						case 8:handan = i8.mapbnk(x4,y4);break;
-						case 9:handan = i9.mapbnk(x4,y4);break;
+
+						if(kaidan==0){
+							switch(MAPnow){
+								case 1:handan = i1.mapbnk(x4,y4);break;
+								case 2:handan = i2.mapbnk(x4,y4);break;
+								case 3:handan = i3.mapbnk(x4,y4);break;
+								case 4:handan = i4.mapbnk(x4,y4);break;
+								case 5:handan = i5.mapbnk(x4,y4);break;
+								case 6:handan = i6.mapbnk(x4,y4);break;
+								case 7:handan = i7.mapbnk(x4,y4);break;
+								case 8:handan = i8.mapbnk(x4,y4);break;
+								case 9:handan = i9.mapbnk(x4,y4);break;
+							}
+						}else if(kaidan==1){
+							switch(MAPnow){
+								case 1:handan = i10.mapbnk(x4,y4);break;
+								case 2:handan = i20.mapbnk(x4,y4);break;
+								case 3:handan = i30.mapbnk(x4,y4);break;
+								case 4:handan = i40.mapbnk(x4,y4);break;
+								case 5:handan = i50.mapbnk(x4,y4);break;
+								case 6:handan = i60.mapbnk(x4,y4);break;
+								case 7:handan = i70.mapbnk(x4,y4);break;
+								case 8:handan = i80.mapbnk(x4,y4);break;
+								case 9:handan = i90.mapbnk(x4,y4);break;
+							}
+						}else if(kaidan==2){
+							handan=iBOSS.mapbnk(x4,y4);
 						}
 						maphandan MAP = new maphandan();
 						int rizardon = MAP.maphndn(x,y);
-						mapmake map = new mapmake();
 						move test7 = new move();
 						if(handan!=1){
 						
 							hk=3;
+							if(handan==5){kaidan=1;
+								//bgm.stop();
+								//se.loop();
+							Aria_Change=1;
+								Repaint paint = new Repaint();
+								paint.repaint(x,y,MAPnow,kaidan);
+							}else if(kaidan==1&&handan==5){kaidan=2;
+								//se.stop();
+								//se2.loop();
+							Aria_Change=1;
+								Repaint paint = new Repaint();
+								paint.repaint(x,y,MAPnow,kaidan);
+							}
 							
 							if(MAPnow != rizardon){
-								for(mapy=30;mapy <=  730-70;mapy+=70){
-									for(mapx=0;mapx <=  700-70;mapx+=70){	
-										map.mapmk(mapx,mapy,x,y,MAPnow,0,0);
-									}
-								}
+								Aria_Change=1;
+								Repaint paint = new Repaint();
+								paint.repaint(x,y,MAPnow,kaidan);
+								
 							}
-							
-							MAPnow=test7.move2(x,y,x2,y2,hk,MAPnow,rizardon);
+							if((x4==tekix&&y4==tekiy)||(x4==teki2x&&y4==teki2y)||(x4==teki3x&&y4==teki3y)||(x4==teki4x&&y4==teki4y)){
+								x+=70;
+							}
+							else
+							MAPnow=test7.move2(x,y,x2,y2,hk,MAPnow,rizardon,turn3);
 						
-					}else {if(MAPnow != rizardon){
-						for(mapy=30;mapy <=  730-70;mapy+=70){
-							for(mapx=0;mapx <=  700-70;mapx+=70){	
-								map.mapmk(mapx,mapy,x,y,MAPnow,0,0);
-							}
-							
+							}else {if(MAPnow != rizardon){
+								Aria_Change=1;
+								Repaint paint = new Repaint();
+								paint.repaint(x,y,MAPnow,kaidan);
+						
+								MAPnow=test7.move2(x,y,x2,y2,hk,MAPnow,rizardon,turn3);
+								x-=70;
+							}x+=70;}
+	
 						}
-						
-						MAPnow=test7.move2(x,y,x2,y2,hk,MAPnow,rizardon);
-						x-=70;
-					}x+=70;}
-							Random rnd = new Random();
-					        int cp = rnd.nextInt(4) + 1;
-					        if(cp==1)tekix+=70;
-					        if(cp==2)tekix-=70;
-					        if(cp==3)tekiy+=70;
-					        if(cp==4)tekiy-=70;
-					        	if(tekix < 0) tekix+=70;
-					        	if(tekix > 2030) tekix+=70;
-					        	if(tekiy < 0) tekiy+=70;
-					        	if(tekiy > 2060) tekiy-=70;
-							teki teki2 = new teki();
-							teki2.a(tekix,tekiy,tekix2,tekiy2,cp,MAPnow);
-						
-					}
 					}
 					break;
 				case KeyEvent.VK_RIGHT:	
@@ -403,8 +533,9 @@ public class Chap3Main extends JFrame {
 					y2=y;
 					x6=x4;
 					y6=y4;
-					tekix2=tekix;
-					tekiy2=tekiy;
+					turn4++;
+					Aria_Change=0;
+					if(turn4>2)turn4=1;
 					if(i==0){
 						x+=70;
 						if(x > 2030){
@@ -418,164 +549,747 @@ public class Chap3Main extends JFrame {
 							else if(y4 >= 730){
 								y4 = y % 730;	
 								y4+=30;}
-						
-							bunki11 i1 = new bunki11();
-							bunki12 i2 = new bunki12();
-							bunki13 i3 = new bunki13();
-							bunki14 i4 = new bunki14();
-							bunki15 i5 = new bunki15();
-							bunki16 i6 = new bunki16();
-							bunki17 i7 = new bunki17();
-							bunki18 i8 = new bunki18();
-							bunki19 i9 = new bunki19();
-						
 							
-							switch(MAPnow){
-							case 1:handan = i1.mapbnk(x4,y4);break;
-							case 2:handan = i2.mapbnk(x4,y4);break;
-							case 3:handan = i3.mapbnk(x4,y4);break;
-							case 4:handan = i4.mapbnk(x4,y4);break;
-							case 5:handan = i5.mapbnk(x4,y4);break;
-							case 6:handan = i6.mapbnk(x4,y4);break;
-							case 7:handan = i7.mapbnk(x4,y4);break;
-							case 8:handan = i8.mapbnk(x4,y4);break;
-							case 9:handan = i9.mapbnk(x4,y4);break;
+							if(kaidan==0){
+								switch(MAPnow){
+									case 1:handan = i1.mapbnk(x4,y4);break;
+									case 2:handan = i2.mapbnk(x4,y4);break;
+									case 3:handan = i3.mapbnk(x4,y4);break;
+									case 4:handan = i4.mapbnk(x4,y4);break;
+									case 5:handan = i5.mapbnk(x4,y4);break;
+									case 6:handan = i6.mapbnk(x4,y4);break;
+									case 7:handan = i7.mapbnk(x4,y4);break;
+									case 8:handan = i8.mapbnk(x4,y4);break;
+									case 9:handan = i9.mapbnk(x4,y4);break;
+								}
+							}else if(kaidan==1){
+								switch(MAPnow){
+									case 1:handan = i10.mapbnk(x4,y4);break;
+									case 2:handan = i20.mapbnk(x4,y4);break;
+									case 3:handan = i30.mapbnk(x4,y4);break;
+									case 4:handan = i40.mapbnk(x4,y4);break;
+									case 5:handan = i50.mapbnk(x4,y4);break;
+									case 6:handan = i60.mapbnk(x4,y4);break;
+									case 7:handan = i70.mapbnk(x4,y4);break;
+									case 8:handan = i80.mapbnk(x4,y4);break;
+									case 9:handan = i90.mapbnk(x4,y4);break;
+								}
+							}else if(kaidan==2){
+								handan=iBOSS.mapbnk(x4,y4);
 							}
 							maphandan MAP = new maphandan();
 							int rizardon = MAP.maphndn(x,y);
-							mapmake map = new mapmake();
 							move test8 = new move();
-						if(handan!=1){
-							
-							hk=4;
-
-							if(MAPnow != rizardon){
-								for(mapy=30;mapy <=  730-70;mapy+=70){
-									for(mapx=0;mapx <=  700-70;mapx+=70){	
-										map.mapmk(mapx,mapy,x,y,MAPnow,0,0);
-									}	
+							if(handan!=1){
+								
+								hk=4;
+								if(handan==5){kaidan=1;
+									//se.loop();
+									//	bgm.stop();
+								Aria_Change=1;
+									Repaint paint = new Repaint();
+									paint.repaint(x,y,MAPnow,kaidan);
+								}else if(kaidan==1&&handan==5){kaidan=2;
+									//se.stop();
+									//se2.loop();
+									Aria_Change=1;
+									Repaint paint = new Repaint();
+									paint.repaint(x,y,MAPnow,kaidan);
 								}
-							}
-							MAPnow=test8.move2(x,y,x2,y2,hk,MAPnow,rizardon);
-						}else{ if(MAPnow != rizardon){
-							for(mapy=30;mapy <=  730-70;mapy+=70){
-								for(mapx=0;mapx <=  700-70;mapx+=70){	
-									map.mapmk(mapx,mapy,x,y,MAPnow,0,0);
-								}	
-							}
-							
-							MAPnow=test8.move2(x,y,x2,y2,hk,MAPnow,rizardon);
-							x+=70;
-						}x-=70;}
-							Random rnd = new Random();
-					        int cp = rnd.nextInt(4) + 1;
-					        if(cp==1)tekix+=70;
-					        if(cp==2)tekix-=70;
-					        if(cp==3)tekiy+=70;
-					        if(cp==4)tekiy-=70;
-					        if(tekix < 0) tekix+=70;
-				        	if(tekix > 2030) tekix+=70;
-				        	if(tekiy < 0) tekiy+=70;
-				        	if(tekiy > 2060) tekiy-=70;
-							teki teki2 = new teki();
-							teki2.a(tekix,tekiy,tekix2,tekiy2,cp,MAPnow);
-						if((x4==700&&x6==630)||(x4==630&&x6==0)||(y4==660&&y6==30)||(y4==30))
-							if(MAPnow != rizardon){
-								for(mapy=30;mapy <=  730-70;mapy+=70){
-									for(mapx=0;mapx <=  700-70;mapx+=70){	
-										map.mapmk(mapx,mapy,x,y,MAPnow,0,0);
-									}
-									//System.out.println();
+								if(MAPnow != rizardon){
+									Aria_Change=1;
+									Repaint paint = new Repaint();
+									paint.repaint(x,y,MAPnow,kaidan);
+									
 								}
-								//MAPnow=test8.move2(x,y,x2,y2,hk,MAPnow,rizardon);
-							}
-					}
+								if((x4==tekix&&y4==tekiy)||(x4==teki2x&&y4==teki2y)||(x4==teki3x&&y4==teki3y)||(x4==teki4x&&y4==teki4y)){
+									x-=70;
+								}
+								else
+								MAPnow=test8.move2(x,y,x2,y2,hk,MAPnow,rizardon,turn4);
+							}else{ if(MAPnow != rizardon){
+								Aria_Change=1;
+								Repaint paint = new Repaint();
+								paint.repaint(x,y,MAPnow,kaidan);
+							
+								MAPnow=test8.move2(x,y,x2,y2,hk,MAPnow,rizardon,turn4);
+								x+=70;
+							}x-=70;}
+		
+						}
 					}
 					break;
 				case KeyEvent.VK_SPACE:
 					if(i==0){
-				/************************** 音楽 *****************************/
-						se.play();
-						
-						Graphics m1 = mainwindow.getGraphics();
-						iv.paint(m1,1,0);
-						
-						tekix2=tekix;
-						tekiy2=tekiy;
-							Attack kougeki = new Attack();
-							kougeki.Attack2(x,y,hk,MAPnow,tekix,tekiy);
-							Random rnd = new Random();
-					        int cp = rnd.nextInt(4) + 1;
-					        if(cp==1)tekix+=70;
-					        if(cp==2)tekix-=70;
-					        if(cp==3)tekiy+=70;
-					        if(cp==4)tekiy-=70;
-					        if(tekix < 0) tekix+=70;
-				        	if(tekix > 2030) tekix+=70;
-				        	if(tekiy < 0) tekiy+=70;
-				        	if(tekiy > 2060) tekiy-=70;
-							teki teki2 = new teki();
-							teki2.a(tekix,tekiy,tekix2,tekiy2,cp,MAPnow);
-					}
+					Graphics m1 = mainwindow.getGraphics();
+					teki t =new teki();
+						iv.paint(m1,1,0,kaidan,0,t.tstetus);
+						Attack kougeki = new Attack();
+						kougeki.Attack2(x,y,hk,MAPnow,kaidan,tekix,tekiy,teki2x,teki2y,teki3x,teki3y,teki4x,teki4y);
+				}
 					break;
 				case KeyEvent.VK_ENTER:
-					try{
-						this.chara = ImageIO.read(this.getClass().getResource
-								("イチゴ剣エフェクト1.gif"));
-							
-						this.chara2 = ImageIO.read(this.getClass().getResource
-								("イチゴ剣エフェクト2.gif"));
-						}catch(IOException e){e.printStackTrace();
-						Graphics g2 = mainwindow.getGraphics();
-						g2.drawImage(chara,280,380,70,70,mainwindow);
+			//		System.out.println("aaaa");
+					Attack kougeki = new Attack();
+					kougeki.Attack_sord(x,y,hk,MAPnow,kaidan);
 					break;
-					
+				case KeyEvent.VK_A:
+					count++;
+					if(count==1){
+						Graphics g1 = mainwindow.getGraphics();
+						g1.drawImage(a,70,530,520,180,mainwindow);
+						System.out.println("sdgasgfagda");
+					}else if(count==2){
+						
+						/*Repaint paint = new Repaint();
+						paint.repaint(x,y,MAPnow,kaidan);
+					 	System.out.println("マプナオシチェック");*/
+						int mozi = 580;
+						Font f=new Font("TimesRoman",Font.ITALIC,40);//Font名："TimesRoman", "Courier", "Helvetica" 等
+						int[] str = new int[6];
+						try {
+							FileReader fr=new FileReader("test.txt");
+							//BufferedReader br = new BufferedReader(fr);
+							StreamTokenizer st=new StreamTokenizer(fr);
+							System.out.println("12121211221212");
+							
+							int mmmm=0;
+							while(st.nextToken()!=StreamTokenizer.TT_EOF){
+								str[mmmm]=(int) st.nval;
+								Graphics g2 = mainwindow.getGraphics();
+								g2.setFont(f);
+								g2.drawString(" "+str[mmmm], 80, mozi);
+								mozi+=30;
+								mmmm++;
+						        }
+							fr.close();
+						} catch (IOException e) {	}
+						iv.lv=str[0];
+						iv.hp=str[1];
+						iv.ak=str[2];
+						iv.def=str[3];
+						iv.MAXhp=str[4];
+						iv.exp=str[5];
+					}else if(count==3){
+						count=0;
+					try{	//FileWriter save = new FileWriter("test.txt");
+						 File save = new File("test.txt");	
+						BufferedWriter bw = new BufferedWriter(new FileWriter(save));
+							bw.write("aaaa");
+							bw.newLine();
+							bw.write(iv.hp);
+							bw.close();
+					}
+					catch(IOException e){}
+					}
+				}	
+			
+				switch(arg0.getKeyCode() ){
+				case KeyEvent.VK_UP:
+				case KeyEvent.VK_DOWN:
+				case KeyEvent.VK_LEFT:
+				case KeyEvent.VK_RIGHT:
+				case KeyEvent.VK_SPACE:
+			//	System.out.println("Aria_Change "+Aria_Change);
+			//	System.out.println("kaidan "+kaidan+" MAPnow "+MAPnow);
+				
+				if(Aria_Change==1){
+					switch(kaidan){
+						case 0:
+							switch(MAPnow){
+								case 1:
+									tekix=0;
+									tekiy=0;
+									teki2x=0;
+									teki2y=0;
+									teki3x=0;
+									teki3y=0;
+									teki4x=0;
+									teki4y=0;
+									break;
+								case 2:
+									tekix=6000;
+									tekiy=6000;
+									teki2x=6000;
+									teki2y=6000;
+									teki3x=6000;
+									teki3y=6000;
+									teki4x=6000;
+									teki4y=6000;
+									break;
+								case 3:
+									tekix=6000;
+									tekiy=6000;
+									teki2x=6000;
+									teki2y=6000;
+									teki3x=6000;
+									teki3y=6000;
+									teki4x=6000;
+									teki4y=6000;
+									break;
+								case 4:
+									tekix=6000;
+									tekiy=6000;
+									teki2x=6000;
+									teki2y=6000;
+									teki3x=6000;
+									teki3y=6000;
+									teki4x=6000;
+									teki4y=6000;
+									break;
+								case 5:
+									tekix=350;
+									tekiy=240;
+									teki2x=280;
+									teki2y=310;
+									teki3x=420;
+									teki3y=310;
+									teki4x=350;
+									teki4y=380;
+									break;
+								case 6:
+									tekix=6000;
+									tekiy=6000;
+									teki2x=6000;
+									teki2y=6000;
+									teki3x=6000;
+									teki3y=6000;
+									teki4x=6000;
+									teki4y=6000;
+									break;
+								case 7:
+									tekix=6000;
+									tekiy=6000;
+									teki2x=6000;
+									teki2y=6000;
+									teki3x=6000;
+									teki3y=6000;
+									teki4x=6000;
+									teki4y=6000;
+									break;
+								case 8:
+									tekix=6000;
+									tekiy=6000;
+									teki2x=6000;
+									teki2y=6000;
+									teki3x=6000;
+									teki3y=6000;
+									teki4x=6000;
+									teki4y=6000;
+									break;
+								case 9:
+									tekix=420;
+									tekiy=450;
+									teki2x=420;
+									teki2y=520;
+									teki3x=6000;
+									teki3y=6000;
+									teki4x=6000;
+									teki4y=6000;
+									break;
+								
+							}break;
+						case 1:
+							switch(MAPnow){
+								case 1:
+									tekix=70;
+									tekiy=380;
+									teki2x=280;
+									teki2y=240;
+									teki3x=350;
+									teki3y=450;
+									teki4x=490;
+									teki4y=520;
+									break;
+								case 2:
+									tekix=420;
+									tekiy=170;
+									teki2x=280;
+									teki2y=310;
+									teki3x=140;
+									teki3y=450;
+									teki4x=6000;
+									teki4y=6000;
+									break;
+								case 3:
+									tekix=490;
+									tekiy=240;
+									teki2x=350;
+									teki2y=380;
+									teki3x=140;
+									teki3y=450;
+									teki4x=6000;
+									teki4y=6000;
+									break;
+								case 4:
+									tekix=70;
+									tekiy=170;
+									teki2x=420;
+									teki2y=170;
+									teki3x=210;
+									teki3y=380;
+									teki4x=6000;
+									teki4y=6000;
+									break;
+								case 5:
+									tekix=6000;
+									tekiy=6000;
+									teki2x=6000;
+									teki2y=6000;
+									teki3x=6000;
+									teki3y=6000;
+									teki4x=6000;
+									teki4y=6000;
+									break;
+								case 6:
+									tekix=210;
+									tekiy=240;
+									teki2x=350;
+									teki2y=240;
+									teki3x=490;
+									teki3y=240;
+									teki4x=350;
+									teki4y=380;
+									break;
+								case 7:
+									tekix=140;
+									tekiy=240;
+									teki2x=490;
+									teki2y=240;
+									teki3x=280;
+									teki3y=380;
+									teki4x=210;
+									teki4y=450;
+									break;
+								case 8:
+									tekix=210;
+									tekiy=170;
+									teki2x=280;
+									teki2y=310;
+									teki3x=420;
+									teki3y=380;
+									teki4x=6000;
+									teki4y=6000;
+									break;
+								case 9:
+									tekix=210;
+									tekiy=240;
+									teki2x=280;
+									teki2y=450;
+									teki3x=6000;
+									teki3y=6000;
+									teki4x=6000;
+									teki4y=6000;
+									break;
+							}break;
+						case 2:
+							switch(MAPnow){
+								case 1:
+									
+								case 2:
+									
+								case 3:
+									
+								case 4:
+									
+								case 5:
+									
+								case 6:
+									
+								case 7:
+									
+								case 8:
+									
+								case 9:
+									tekix=6000;
+									tekiy=6000;
+									teki2x=6000;
+									teki2y=6000;
+									teki3x=6000;
+									teki3y=6000;
+									teki4x=6000;
+									teki4y=6000;
+							}break;
+					}
 				}
+			//	System.out.println("tekix "+tekix+" tekiy "+tekiy);
+			//	System.out.println("teki2x "+teki2x+" teki2y "+teki2y);
+			//	System.out.println("teki3x "+teki3x+" teki3y "+teki3y);
+			//	System.out.println("teki4x "+teki4x+" teki4y "+teki4y);
+				teki teki2 = new teki();
+				teki2 teki3 = new teki2();
+				teki3 teki4 = new teki3();
+				teki4 teki5 = new teki4();
+				
+					tekix2=tekix;
+					tekiy2=tekiy;
+					teki2x2=teki2x;
+					teki2y2=teki2y;
+					teki3x2=teki3x;
+					teki3y2=teki3y;
+					teki4x2=teki4x;
+					teki4y2=teki4y;
+					int y3 = y;	
+					Myx = x % 700;
+					if(y3 >= 1430){
+						Myy = y % 1430;
+						Myy+=30;
+
+					}
+					else if(y3 >= 730){
+						Myy = y % 730;
+						Myy+=30;					
+					}else{Myy=y;}
+// *********************************   敵１っ太目
+					//System.out.println("tekiaaaaaaaaaaaaaaaaaa  "+teki2.tstetus[0]);
+					if(teki2.tstetus[0]==1){
+				if((kaidan==0&&MAPnow==5)||(kaidan==0&&MAPnow==9)||(kaidan==1&&MAPnow==1)||(kaidan==1&&MAPnow==2)||(kaidan==1&&MAPnow==3)||(kaidan==1&&MAPnow==4)||(kaidan==1&&MAPnow==6)||(kaidan==1&&MAPnow==7)||(kaidan==1&&MAPnow==8)||(kaidan==1&&MAPnow==9)){
+					if(Myx==tekix||Myy==tekiy){
+						if(Myx<tekix)cp=3;
+						if(Myx>tekix) cp=4;
+						if(Myy<tekiy)cp=1;
+						if(Myy>tekiy) cp=2;
+					//	System.out.println("ｳｺﾞｹﾏｾﾝ");
+						if(Aria_Change==0){
+							teki2.tekiA(tekix,tekiy,cp,MAPnow,Myx,Myy,kaidan,teki2x,teki2y,teki3x,teki3y,teki4x,teki4y,MyHP);
+							teki2.a(tekix,tekiy,tekix2,tekiy2,cp,MAPnow,Myx,Myy,kaidan);
+						}
+						teki2.a(tekix,tekiy,tekix2,tekiy2,cp,MAPnow,Myx,Myy,kaidan);
+					}
+					else{
+					//	System.out.println("一番目");
+						Random rnd = new Random();
+				        cp = rnd.nextInt(4) + 1;
+				        if(Aria_Change==0){
+				        	 if(cp==1)tekix+=70;
+				        	if(cp==2)tekix-=70;
+				        	if(cp==3)tekiy+=70;
+				        	if(cp==4)tekiy-=70;
+				        }
+					if((tekix==teki2x&&tekiy==teki2y)||(tekix==teki3x&&tekiy==teki3y)||(tekix==teki4x&&tekiy==teki4y)||(tekix==Myx&&tekiy==Myy)){
+						if(cp==1)tekix-=70;
+				        if(cp==2)tekix+=70;
+				        if(cp==3)tekiy-=70;
+				        if(cp==4)tekiy+=70;
+					}
+					        if(tekix < 0) {tekix+=70;wool1=1;}
+				        	if(tekix > 630) {tekix-=70;wool1=1;}
+				        	if(tekiy < 0) {tekiy+=70;wool1=1;}
+				        	if(tekiy > 660) {tekiy-=70;wool1=1;}
+				       	int tekihx=tekix,tekihy=tekiy;
+	
+					
+							if(kaidan==0){
+								switch(MAPnow){
+									case 1:handan = i1.mapbnk(tekihx,tekihy);break;
+									case 2:handan = i2.mapbnk(tekihx,tekihy);break;
+									case 3:handan = i3.mapbnk(tekihx,tekihy);break;
+									case 4:handan = i4.mapbnk(tekihx,tekihy);break;
+									case 5:handan = i5.mapbnk(tekihx,tekihy);break;
+									case 6:handan = i6.mapbnk(tekihx,tekihy);break;
+									case 7:handan = i7.mapbnk(tekihx,tekihy);break;
+									case 8:handan = i8.mapbnk(tekihx,tekihy);break;
+									case 9:handan = i9.mapbnk(tekihx,tekihy);break;
+								}
+							}else if(kaidan==1){
+								switch(MAPnow){
+									case 1:handan = i10.mapbnk(tekihx,tekihy);break;
+									case 2:handan = i20.mapbnk(tekihx,tekihy);break;
+									case 3:handan = i30.mapbnk(tekihx,tekihy);break;
+									case 4:handan = i40.mapbnk(tekihx,tekihy);break;
+									case 5:handan = i50.mapbnk(tekihx,tekihy);break;
+									case 6:handan = i60.mapbnk(tekihx,tekihy);break;
+									case 7:handan = i70.mapbnk(tekihx,tekihy);break;
+									case 8:handan = i80.mapbnk(tekihx,tekihy);break;
+									case 9:handan = i90.mapbnk(tekihx,tekihy);break;
+								}
+							}
+						//	System.out.println(tekix+" "+tekiy);
+							if(handan==2){
+								if(wool1==1){}
+								else teki2.a(tekix,tekiy,tekix2,tekiy2,cp,MAPnow,Myx,Myy,kaidan);
+							}else{
+								if(cp==1)tekix-=70;
+						        if(cp==2)tekix+=70;
+						        if(cp==3)tekiy-=70;
+						        if(cp==4)tekiy+=70;
+							}
+							wool1=0;
+					}
 				}
 			}else{
-				maphandan MAP = new maphandan();
-				int rizardon = MAP.maphndn(x,y);
-				move is = new move();
-				mapmake remap = new mapmake();
-				remap.mapmk(x, y,x,y,MAPnow,0,1);
-				MAPnow=is.move2(x,y,x,y,hk,MAPnow, rizardon);
+				tekix=10000;
+				tekiy=10000;
+			}
+// *********************************   敵２っ太目＊＊＊＊＊＊＊＊＊＊＊＊＊
+					//System.out.println("tekibbbbbbbbbbb  "+teki3.tstetus[0]);
+					if(teki3.tstetus[0]==1){
+			if((kaidan==0&&MAPnow==5)||(kaidan==0&&MAPnow==9)||(kaidan==1&&MAPnow==1)||(kaidan==1&&MAPnow==2)||(kaidan==1&&MAPnow==3)||(kaidan==1&&MAPnow==4)||(kaidan==1&&MAPnow==6)||(kaidan==1&&MAPnow==7)||(kaidan==1&&MAPnow==8)||(kaidan==1&&MAPnow==9)){
+				if(Myx==teki2x||Myy==teki2y){
+					if(Myx<teki2x)cp2=3;
+					if(Myx>teki2x) cp2=4;
+					if(Myy<teki2y)cp2=1;
+					if(Myy>teki2y) cp2=2;
+					//	System.out.println("ｳｺﾞｹﾏｾﾝ");
+					if(Aria_Change==0){
+						teki3.tekiA(teki2x,teki2y,cp2,MAPnow,Myx,Myy,kaidan,tekix,tekiy,teki3x,teki3y,teki4x,teki4y,MyHP);
+						teki3.a(teki2x,teki2y,teki2x2,teki2y2,cp2,MAPnow,Myx,Myy,kaidan);
+					}
+					teki3.a(teki2x,teki2y,teki2x2,teki2y2,cp2,MAPnow,Myx,Myy,kaidan);
+					}
+					else{
+					//	System.out.println("二番目");
+						Random rnd = new Random();
+				        cp2 = rnd.nextInt(4) + 1;
+				        if(Aria_Change==0){
+				        	  if(cp2==1)teki2x+=70;
+				       	 	if(cp2==2)teki2x-=70;
+				        	if(cp2==3)teki2y+=70;
+				        	if(cp2==4)teki2y-=70;
+				        }
+						if((teki2x==tekix&&teki2y==tekiy)||(teki2x==teki3x&&teki2y==teki3y)||(teki2x==teki4x&&teki2y==teki4y)||(teki2x==Myx&&teki2y==Myy)){
+							if(cp2==1)teki2x-=70;
+				        	if(cp2==2)teki2x+=70;
+				        	if(cp2==3)teki2y-=70;
+				        	if(cp2==4)teki2y+=70;
+						}
+					        if(teki2x < 0) {teki2x+=70;wool2=1;}
+				        	if(teki2x > 630) {teki2x-=70;wool2=1;}
+				        	if(teki2y < 0) {teki2y+=70;wool2=1;}
+				        	if(teki2y > 660) {teki2y-=70;wool2=1;}
+				        	int teki2hx=teki2x,teki2hy=teki2y;
+				        	
+
+							if(kaidan==0){
+								switch(MAPnow){
+									case 1:handan = i1.mapbnk(teki2hx,teki2hy);break;
+									case 2:handan = i2.mapbnk(teki2hx,teki2hy);break;
+									case 3:handan = i3.mapbnk(teki2hx,teki2hy);break;
+									case 4:handan = i4.mapbnk(teki2hx,teki2hy);break;
+									case 5:handan = i5.mapbnk(teki2hx,teki2hy);break;
+									case 6:handan = i6.mapbnk(teki2hx,teki2hy);break;
+									case 7:handan = i7.mapbnk(teki2hx,teki2hy);break;
+									case 8:handan = i8.mapbnk(teki2hx,teki2hy);break;
+									case 9:handan = i9.mapbnk(teki2hx,teki2hy);break;
+								}
+							}else if(kaidan==1){
+								switch(MAPnow){
+									case 1:handan = i10.mapbnk(teki2hx,teki2hy);break;
+									case 2:handan = i20.mapbnk(teki2hx,teki2hy);break;
+									case 3:handan = i30.mapbnk(teki2hx,teki2hy);break;
+									case 4:handan = i40.mapbnk(teki2hx,teki2hy);break;
+									case 5:handan = i50.mapbnk(teki2hx,teki2hy);break;
+									case 6:handan = i60.mapbnk(teki2hx,teki2hy);break;
+									case 7:handan = i70.mapbnk(teki2hx,teki2hy);break;
+									case 8:handan = i80.mapbnk(teki2hx,teki2hy);break;
+									case 9:handan = i90.mapbnk(teki2hx,teki2hy);break;
+								}
+							}
+				//			System.out.println(tekihx+" "+tekihy);
+							if(handan==2){
+								if(wool2==1){}
+								else
+								teki3.a(teki2x,teki2y,teki2x2,teki2y2,cp2,MAPnow,Myx,Myy,kaidan);
+							}else{
+								if(cp2==1)teki2x-=70;
+						        if(cp2==2)teki2x+=70;
+						        if(cp2==3)teki2y-=70;
+						        if(cp2==4)teki2y+=70;
+							}
+							wool2=0;
+					}
+			}
+					}else{
+						teki2x=10000;
+						teki2y=10000;
+					}
+					// *********************************   敵３っ太目＊＊＊＊＊＊＊＊＊＊＊＊＊
+					//System.out.println("tekiccccccccccccc  "+teki4.tstetus[0]);
+					if(teki4.tstetus[0]==1){
+					if((kaidan==0&&MAPnow==5)||(Myx==teki3x||Myy==teki3y)||(kaidan==1&&MAPnow==1)||(kaidan==1&&MAPnow==2)||(kaidan==1&&MAPnow==3)||(kaidan==1&&MAPnow==4)||(kaidan==1&&MAPnow==6)||(kaidan==1&&MAPnow==7)||(kaidan==1&&MAPnow==8)){
+						if(Myx==teki3x||Myy==teki3y){
+						if(Myx<teki3x)cp3=3;
+						if(Myx>teki3x) cp3=4;
+						if(Myy<teki3y) cp3=1;
+						if(Myy>teki3y) cp3=2;
+					//	System.out.println("ｳｺﾞｹﾏｾﾝ");
+						if(Aria_Change==0){
+							teki4.tekiA(teki3x,teki3y,cp3,MAPnow,Myx,Myy,kaidan,teki2x,teki2y,tekix,tekiy,teki4x,teki4y,MyHP);
+							teki4.a(teki3x,teki3y,teki3x2,teki3y2,cp3,MAPnow,Myx,Myy,kaidan);
+						}
+						teki4.a(teki3x,teki3y,teki3x2,teki3y2,cp3,MAPnow,Myx,Myy,kaidan);
+					}
+					else{
+					//	System.out.println("三番目");
+						Random rnd = new Random();
+				        cp3 = rnd.nextInt(4) + 1;
+				        if(Aria_Change==0){
+				        	 if(cp3==1)teki3x+=70;
+				        	if(cp3==2)teki3x-=70;
+				        	if(cp3==3)teki3y+=70;
+				        	if(cp3==4)teki3y-=70;
+				        }
+						if((teki3x==teki2x&&teki3y==teki2y)||(tekix==teki3x&&tekiy==teki3y)||(teki3x==teki4x&&teki3y==teki4y)||(teki3x==Myx&&teki3y==Myy)){
+							if(cp3==1)teki3x-=70;
+				        	if(cp3==2)teki3x+=70;
+				        	if(cp3==3)teki3y-=70;
+				        	if(cp3==4)teki3y+=70;
+						}
+					        if(teki3x < 0){teki3x+=70;wool3=1;}
+				        	if(teki3x > 630) {teki3x-=70;wool3=1;}
+				        	if(teki3y < 0) {teki3y+=70;wool3=1;}
+				        	if(teki3y > 660) {teki3y-=70;wool3=1;}
+				        	int teki3hx=teki3x,teki3hy=teki3y;
+
+							if(kaidan==0){
+								switch(MAPnow){
+									case 1:handan = i1.mapbnk(teki3hx,teki3hy);break;
+									case 2:handan = i2.mapbnk(teki3hx,teki3hy);break;
+									case 3:handan = i3.mapbnk(teki3hx,teki3hy);break;
+									case 4:handan = i4.mapbnk(teki3hx,teki3hy);break;
+									case 5:handan = i5.mapbnk(teki3hx,teki3hy);break;
+									case 6:handan = i6.mapbnk(teki3hx,teki3hy);break;
+									case 7:handan = i7.mapbnk(teki3hx,teki3hy);break;
+									case 8:handan = i8.mapbnk(teki3hx,teki3hy);break;
+									case 9:handan = i9.mapbnk(teki3hx,teki3hy);break;
+								}
+							}else if(kaidan==1){
+								switch(MAPnow){
+									case 1:handan = i10.mapbnk(teki3hx,teki3hy);break;
+									case 2:handan = i20.mapbnk(teki3hx,teki3hy);break;
+									case 3:handan = i30.mapbnk(teki3hx,teki3hy);break;
+									case 4:handan = i40.mapbnk(teki3hx,teki3hy);break;
+									case 5:handan = i50.mapbnk(teki3hx,teki3hy);break;
+									case 6:handan = i60.mapbnk(teki3hx,teki3hy);break;
+									case 7:handan = i70.mapbnk(teki3hx,teki3hy);break;
+									case 8:handan = i80.mapbnk(teki3hx,teki3hy);break;
+									case 9:handan = i90.mapbnk(teki3hx,teki3hy);break;
+								}
+							}
+				//			System.out.println(tekihx+" "+tekihy);
+							if(handan==2){
+								if(wool3==1){}
+								else
+									teki4.a(teki3x,teki3y,teki3x2,teki3y2,cp3,MAPnow,Myx,Myy,kaidan);
+							}else{
+								if(cp3==1)teki3x-=70;
+						        if(cp3==2)teki3x+=70;
+						        if(cp3==3)teki3y-=70;
+						        if(cp3==4)teki3y+=70;
+							}
+							wool3=0;
+					}
+				}else{
+					teki3x=10000;
+					teki3y=10000;
+				}
+				}
+					// *********************************   敵４っ太目＊＊＊＊＊＊＊＊＊＊＊＊＊
+					//System.out.println("tekiddddddddddddd  "+teki5.tstetus[0]);
+					if(teki5.tstetus[0]==1){
+				if((kaidan==0&&MAPnow==5)||(kaidan==1&&MAPnow==1)||(kaidan==1&&MAPnow==6)||(kaidan==1&&MAPnow==7)){
+					if(Myx==teki4x||Myy==teki4y){
+						if(Myx<teki4x)cp4=3;
+						if(Myx>teki4x) cp4=4;
+						if(Myy<teki4y)cp4=1;
+						if(Myy>teki4y) cp4=2;
+					//	System.out.println("ｳｺﾞｹﾏｾﾝ");
+						if(Aria_Change==0){
+							teki5.tekiA(teki4x,teki4y,cp4,MAPnow,Myx,Myy,kaidan,teki2x,teki2y,teki3x,teki3y,tekix,tekiy,MyHP);
+							teki5.a(teki4x,teki4y,teki4x2,teki4y2,cp4,MAPnow,Myx,Myy,kaidan);
+						}
+						teki5.a(teki4x,teki4y,teki4x2,teki4y2,cp4,MAPnow,Myx,Myy,kaidan);
+					}	
+					else{
+					//	System.out.println("四番目");
+						Random rnd = new Random();
+				        cp4 = rnd.nextInt(4) + 1;
+				        if(Aria_Change==0){
+				        	  if(cp4==1)teki4x+=70;
+				        	if(cp4==2)teki4x-=70;
+				        	if(cp4==3)teki4y+=70;
+				        	if(cp4==4)teki4y-=70;
+				        }
+						if((teki4x==teki2x&&teki4y==teki2y)||(teki4x==teki3x&&teki4y==teki3y)||(tekix==teki4x&&tekiy==teki4y)||(teki4x==Myx&&teki4y==Myy)){
+							if(cp4==1)teki4x-=70;
+				        	if(cp4==2)teki4x+=70;
+				        	if(cp4==3)teki4y-=70;
+				        	if(cp4==4)teki4y+=70;
+						}
+					        if(teki4x < 0){ teki4x+=70;wool4=1;}
+				        	if(teki4x > 630){ teki4x-=70;wool4=1;}
+				        	if(teki4y < 0){ teki4y+=70;wool4=1;}
+				        	if(teki4y > 660) {teki4y-=70;wool4=1;}
+				        	int teki4hx=teki4x,teki4hy=teki4y;
+				        	
+							if(kaidan==0){
+								switch(MAPnow){
+									case 1:handan = i1.mapbnk(teki4hx,teki4hy);break;
+									case 2:handan = i2.mapbnk(teki4hx,teki4hy);break;
+									case 3:handan = i3.mapbnk(teki4hx,teki4hy);break;
+									case 4:handan = i4.mapbnk(teki4hx,teki4hy);break;
+									case 5:handan = i5.mapbnk(teki4hx,teki4hy);break;
+									case 6:handan = i6.mapbnk(teki4hx,teki4hy);break;
+									case 7:handan = i7.mapbnk(teki4hx,teki4hy);break;
+									case 8:handan = i8.mapbnk(teki4hx,teki4hy);break;
+									case 9:handan = i9.mapbnk(teki4hx,teki4hy);break;
+								}
+							}else if(kaidan==1){
+								switch(MAPnow){
+									case 1:handan = i10.mapbnk(teki4hx,teki4hy);break;
+									case 2:handan = i20.mapbnk(teki4hx,teki4hy);break;
+									case 3:handan = i30.mapbnk(teki4hx,teki4hy);break;
+									case 4:handan = i40.mapbnk(teki4hx,teki4hy);break;
+									case 5:handan = i50.mapbnk(teki4hx,teki4hy);break;
+									case 6:handan = i60.mapbnk(teki4hx,teki4hy);break;
+									case 7:handan = i70.mapbnk(teki4hx,teki4hy);break;
+									case 8:handan = i80.mapbnk(teki4hx,teki4hy);break;
+									case 9:handan = i90.mapbnk(teki4hx,teki4hy);break;
+								}
+							}
+				//			System.out.println(tekihx+" "+tekihy);
+							if(handan==2){
+								if(wool4==1){}
+								else
+								teki5.a(teki4x,teki4y,teki4x2,teki4y2,cp4,MAPnow,Myx,Myy,kaidan);
+								wool4=0;
+							}else{
+								if(cp4==1)teki4x-=70;
+						        if(cp4==2)teki4x+=70;
+						        if(cp4==3)teki4y-=70;
+						        if(cp4==4)teki4y+=70;
+							}break;
+					}
+				}
+			}else{
+				teki4x=10000;
+				teki4y=10000;
 			}
 		}
-
-	@Override
-	public void keyTyped(KeyEvent arg0) {
-		// TODO Auto-generated method stub
-		
-	}
-	 }
-	 /************************* 主人公移動 *************************/
-	 class move {
-			BufferedImage  chara;
-		
-			int move2(int x, int y,int x2,int y2,int hk,int MAPnow,int rizardon){
+		}else{
+			maphandan MAP = new maphandan();
+			int rizardon = MAP.maphndn(x,y);
+			move is = new move();
+			mapmake remap = new mapmake();
+			remap.mapmk(x, y,x,y,MAPnow,0,1,0);
+			MAPnow=is.move2(x,y,x,y,hk,MAPnow, rizardon,1);
+		}
+			}	
+			
+			@Override
+			public void keyTyped(KeyEvent arg0) {
+				// TODO Auto-generated method stub
+				
+			}
+	 }//class test
+	 class move extends Thread {
+			
+			int move2(int x, int y,int x2,int y2,int hk,int MAPnow,int rizardon,int turn){
 				int x4=x,y4=y,x5,y5;
+				System.out.println("turn "+turn);
 				
-				try{
-					switch(hk){
-					case 1:this.chara = ImageIO.read(this.getClass().getResource
-							("主人公裏面.gif"));
-								break;
-					case 2:this.chara = ImageIO.read(this.getClass().getResource
-							("主人公表面.gif"));
-							break;
-							
-					case 3:this.chara = ImageIO.read(this.getClass().getResource
-							("主人公左向き.gif"));
-						break;
-					case 4:this.chara = ImageIO.read(this.getClass().getResource
-							("主人公右向き.gif"));
-						break;
-					}
-					}catch(IOException e){e.printStackTrace();
-					}
 				Graphics g = mainwindow.getGraphics();
-				System.out.println(x4+" "+y4);
-				
+
 				int y3 = y;	
 				x = x % 700;
 				x2 = x2 % 700;
@@ -600,49 +1314,95 @@ public class Chap3Main extends JFrame {
 				case 3:x4-=70;x5-=70;break;
 				case 4:x4+=70;x5+=70;break;
 				}
+			/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////	
 				
 				mapmake remap = new mapmake();
-					remap.mapmk(x2, y2,x4,y4,MAPnow,0,1);
-				
+				if(MAPnow == rizardon)
+					remap.mapmk(x2, y2,x4,y4,MAPnow,0,1,0);
+
 				maphandan MAP = new maphandan();
+				System.out.println("MYmove x "+x+ " y "+y);
+					switch(hk){
+						case 1:switch(turn){
+							case 1:g.drawImage(charabr,x,y,70,70,mainwindow);
+							try{Thread.sleep(20);}catch(InterruptedException e){}
+									g.drawImage(move,x,y,70,70,mainwindow);
+									g.drawImage(charab,x,y,70,70,mainwindow);
+									break;
+							
+							case 2:g.drawImage(charabl,x,y,70,70,mainwindow);
+							try{Thread.sleep(20);}catch(InterruptedException e){}
+									g.drawImage(move,x,y,70,70,mainwindow);
+									g.drawImage(charab,x,y,70,70,mainwindow);
+									break;
+						}
+								break;
+						case 2:switch(turn){
+							case 1:g.drawImage(charafr,x,y,70,70,mainwindow);
+							try{Thread.sleep(20);}catch(InterruptedException e){}
+								g.drawImage(move,x,y,70,70,mainwindow);
+								g.drawImage(charaf,x,y,70,70,mainwindow);
+								break;
 				
-				g.drawImage(chara,x,y,70,70,mainwindow);
-				return rizardon;
+							case 2:g.drawImage(charafl,x,y,70,70,mainwindow);
+							try{Thread.sleep(20);}catch(InterruptedException e){}
+								g.drawImage(move,x,y,70,70,mainwindow);
+								g.drawImage(charaf,x,y,70,70,mainwindow);
+								break;
+						}
+							break;
+							
+						case 3:switch(turn){
+							case 1:g.drawImage(charalr,x,y,70,70,mainwindow);
+							try{Thread.sleep(20);}catch(InterruptedException e){}
+								g.drawImage(move,x,y,70,70,mainwindow);
+								g.drawImage(charal,x,y,70,70,mainwindow);
+								break;
+						
+							case 2:g.drawImage(charall,x,y,70,70,mainwindow);
+							try{Thread.sleep(20);}catch(InterruptedException e){}
+								g.drawImage(move,x,y,70,70,mainwindow);
+								g.drawImage(charal,x,y,70,70,mainwindow);
+								break;
+					}
+							break;
+						case 4:switch(turn){
+							case 1:g.drawImage(chararr,x,y,70,70,mainwindow);
+							try{Thread.sleep(20);}catch(InterruptedException e){}
+								g.drawImage(move,x,y,70,70,mainwindow);
+								g.drawImage(charar,x,y,70,70,mainwindow);
+								break;
+				
+							case 2:g.drawImage(chararl,x,y,70,70,mainwindow);
+							try{Thread.sleep(20);}catch(InterruptedException e){}
+								g.drawImage(move,x,y,70,70,mainwindow);
+								g.drawImage(charar,x,y,70,70,mainwindow);
+								break;
+					}
+							break;
+					}
+				return rizardon;	
 	 	}	
-	 }
- 	/*********************** 攻撃エフェクト ****************************/
+			
+	 }//class move
+ ///////////////////////////////////////////   ATTACK ///////////////////////////////////////////////////	
 	 class Attack extends Thread{
-		 BufferedImage ak,chara3;
+		 BufferedImage ak,chara3,chara4,aka;
+		
 		 int dandoux,dandouy;
 		 int dandoux2,dandouy2;
-		// int tekihp=iv.thp;
-		 int type=1;
-		void Attack2(int x,int y,int muki,int MAPnow,int tekix,int tekiy){
+		 int tekihp;
+		 int type=1;	
+		void Attack2(int x,int y,int muki,int MAPnow,int kaidan,int tekix,int tekiy,int teki2x,int teki2y,int teki3x,int teki3y,int teki4x,int teki4y ){
 			int x2 = x;
 			int y2 = y;
-			 try{
-				 switch(muki){
-				 case 1:this.ak = ImageIO.read(this.getClass().getResource
-						 ("攻撃１上.gif"));
-				 		break;
-				 case 2:this.ak = ImageIO.read(this.getClass().getResource
-						 ("攻撃１下.gif"));
-				 		break;
-				 case 3:this.ak = ImageIO.read(this.getClass().getResource
-						 ("攻撃１左.gif"));
-				 		break;
-				 case 4:this.ak = ImageIO.read(this.getClass().getResource
-						 ("攻撃１右.gif"));
-				 		break;
-				 }
-			 }catch(IOException e){
-				 e.printStackTrace();
-			 }
+			int handan = 0;
+			
 			 Graphics g2 = mainwindow.getGraphics();
-			 
+	
 			 	for(int i = 1;i < 7;i++){
 			 		switch(muki){
-			 		case 1:
+			 		case 1:	
 			 			int y3 = y;	
 						x = x % 700;
 						if(y3 >= 1430){
@@ -653,7 +1413,60 @@ public class Chap3Main extends JFrame {
 							y = y % 730;						
 							y+=30;
 						}
-			 			g2.drawImage(ak,x,y+i*(-70),70,70,mainwindow);
+						if(i==1){
+							dandoux2=x;
+				 			dandouy2=y;
+				 	//		System.out.println(dandoux2+" "+dandouy2);
+							}
+						if(kaidan==0){
+							switch(MAPnow){
+							case 1:handan = i1.mapbnk(dandoux2,dandouy2-70);break;
+							case 2:handan = i2.mapbnk(dandoux2,dandouy2-70);break;
+							case 3:handan = i3.mapbnk(dandoux2,dandouy2-70);break;
+							case 4:handan = i4.mapbnk(dandoux2,dandouy2-70);break;
+							case 5:handan = i5.mapbnk(dandoux2,dandouy2-70);break;
+							case 6:handan = i6.mapbnk(dandoux2,dandouy2-70);break;
+							case 7:handan = i7.mapbnk(dandoux2,dandouy2-70);break;
+							case 8:handan = i8.mapbnk(dandoux2,dandouy2-70);break;
+							case 9:handan = i9.mapbnk(dandoux2,dandouy2-70);break;
+							}
+						}else if(kaidan==1){
+							switch(MAPnow){
+							case 1:handan = i10.mapbnk(dandoux2,dandouy2-70);break;
+							case 2:handan = i20.mapbnk(dandoux2,dandouy2-70);break;
+							case 3:handan = i30.mapbnk(dandoux2,dandouy2-70);break;
+							case 4:handan = i40.mapbnk(dandoux2,dandouy2-70);break;
+							case 5:handan = i50.mapbnk(dandoux2,dandouy2-70);break;
+							case 6:handan = i60.mapbnk(dandoux2,dandouy2-70);break;
+							case 7:handan = i70.mapbnk(dandoux2,dandouy2-70);break;
+							case 8:handan = i80.mapbnk(dandoux2,dandouy2-70);break;
+							case 9:handan = i90.mapbnk(dandoux2,dandouy2-70);break;
+							}
+						}else if(kaidan==2){
+							handan = iBOSS.mapbnk(dandoux2,dandouy2-70);
+						}
+						
+					//	System.out.println("MAPnow "+MAPnow+"handan "+handan);
+						if(handan==2){
+							if(dandoux2==tekix&&dandouy2-70==tekiy){
+								type=1;
+							}
+							if(dandoux2==teki2x&&dandouy2-70==teki2y){
+								type=2;
+							}
+							if(dandoux2==teki3x&&dandouy2-70==teki3y){
+								type=3;
+							}
+							if(dandoux2==teki4x&&dandouy2-70==teki4y){
+								type=4;
+							}
+								
+							g2.drawImage(dana,x,y+i*(-70),70,70,mainwindow);
+						}else{
+							if(i==1){dandoux=140;dandouy=30;}
+							break;
+						}
+			 			
 			 			dandoux=x;
 			 			dandouy=y+i*(-70);
 			 			dandoux2=dandoux;
@@ -661,16 +1474,68 @@ public class Chap3Main extends JFrame {
 			 			break;
 			 		case 2:
 			 			int y4 = y;	
-						x = x % 700;					
+						x = x % 700;
+					
 						if(y4 >= 1430){
 							y = y % 1430;	
 							y+=30;	
 						}
 						else if(y4 >= 730){
-						y = y % 730;						
+							y = y % 730;						
 							y+=30;
 						}
-			 			g2.drawImage(ak,x,y+i*70,70,70,mainwindow);
+						if(i==1){
+							dandoux2=x;
+				 			dandouy2=y;
+				 	//		System.out.println(dandoux2+" "+dandouy2);
+							}
+						if(kaidan==0){
+						switch(MAPnow){
+						case 1:handan = i1.mapbnk(dandoux2,dandouy2+70);break;
+						case 2:handan = i2.mapbnk(dandoux2,dandouy2+70);break;
+						case 3:handan = i3.mapbnk(dandoux2,dandouy2+70);break;
+						case 4:handan = i4.mapbnk(dandoux2,dandouy2+70);break;
+						case 5:handan = i5.mapbnk(dandoux2,dandouy2+70);break;
+						case 6:handan = i6.mapbnk(dandoux2,dandouy2+70);break;
+						case 7:handan = i7.mapbnk(dandoux2,dandouy2+70);break;
+						case 8:handan = i8.mapbnk(dandoux2,dandouy2+70);break;
+						case 9:handan = i9.mapbnk(dandoux2,dandouy2+70);break;
+						}
+						}else if(kaidan==1){
+							switch(MAPnow){
+							case 1:handan = i10.mapbnk(dandoux2,dandouy2+70);break;
+							case 2:handan = i20.mapbnk(dandoux2,dandouy2+70);break;
+							case 3:handan = i30.mapbnk(dandoux2,dandouy2+70);break;
+							case 4:handan = i40.mapbnk(dandoux2,dandouy2+70);break;
+							case 5:handan = i50.mapbnk(dandoux2,dandouy2+70);break;
+							case 6:handan = i60.mapbnk(dandoux2,dandouy2+70);break;
+							case 7:handan = i70.mapbnk(dandoux2,dandouy2+70);break;
+							case 8:handan = i80.mapbnk(dandoux2,dandouy2+70);break;
+							case 9:handan = i90.mapbnk(dandoux2,dandouy2+70);break;
+							}
+						}else if(kaidan==2){
+							handan = iBOSS.mapbnk(dandoux2,dandouy2+70);
+						}
+						if(dandoux2==tekix&&dandouy2+70==tekiy){
+							type=1;
+						}
+						if(dandoux2==teki2x&&dandouy2+70==teki2y){
+							type=2;
+						}
+						if(dandoux2==teki3x&&dandouy2+70==teki3y){
+							type=3;
+						}
+						if(dandoux2==teki4x&&dandouy2+70==teki4y){
+							type=4;
+						}
+				//		System.out.println("MAPnow "+MAPnow+"handan "+handan);
+						if(handan==2)	
+			 			g2.drawImage(danu,x,y+i*70,70,70,mainwindow);
+						else{
+							if(i==1){dandoux=2170;dandouy=1415;}
+							break;
+						}
+						
 			 			dandoux=x;
 			 			dandouy=y+i*70;
 			 			dandoux2=dandoux;
@@ -679,7 +1544,7 @@ public class Chap3Main extends JFrame {
 			 		case 3:
 			 			int y5 = y;	
 						x = x % 700;
-						if(y5 >= 1430){
+					if(y5 >= 1430){
 							y = y % 1430;	
 							y+=30;	
 						}
@@ -687,7 +1552,57 @@ public class Chap3Main extends JFrame {
 							y = y % 730;						
 							y+=30;
 						}
-			 			g2.drawImage(ak,x+i*(-70),y,70,70,mainwindow);
+						if(i==1){
+							dandoux2=x;
+				 			dandouy2=y;
+				// 			System.out.println(dandoux2+" "+dandouy2);
+							}
+					if(kaidan==0){
+						switch(MAPnow){
+						case 1:handan = i1.mapbnk(dandoux2-70,dandouy2);break;
+						case 2:handan = i2.mapbnk(dandoux2-70,dandouy2);break;
+						case 3:handan = i3.mapbnk(dandoux2-70,dandouy2);break;
+						case 4:handan = i4.mapbnk(dandoux2-70,dandouy2);break;
+						case 5:handan = i5.mapbnk(dandoux2-70,dandouy2);break;
+						case 6:handan = i6.mapbnk(dandoux2-70,dandouy2);break;
+						case 7:handan = i7.mapbnk(dandoux2-70,dandouy2);break;
+						case 8:handan = i8.mapbnk(dandoux2-70,dandouy2);break;
+						case 9:handan = i9.mapbnk(dandoux2-70,dandouy2);break;
+						}
+						}else if(kaidan==1){
+							switch(MAPnow){
+							case 1:handan = i10.mapbnk(dandoux2-70,dandouy2);break;
+							case 2:handan = i20.mapbnk(dandoux2-70,dandouy2);break;
+							case 3:handan = i30.mapbnk(dandoux2-70,dandouy2);break;
+							case 4:handan = i40.mapbnk(dandoux2-70,dandouy2);break;
+							case 5:handan = i50.mapbnk(dandoux2-70,dandouy2);break;
+							case 6:handan = i60.mapbnk(dandoux2-70,dandouy2);break;
+							case 7:handan = i70.mapbnk(dandoux2-70,dandouy2);break;
+							case 8:handan = i80.mapbnk(dandoux2-70,dandouy2);break;
+							case 9:handan = i90.mapbnk(dandoux2-70,dandouy2);break;
+							}
+						}else if(kaidan==2){
+							handan = iBOSS.mapbnk(dandoux2-70,dandouy2);
+						}
+						System.out.println("MAPnow "+MAPnow+"handan "+handan);
+						if(dandoux2-70==tekix&&dandouy2==tekiy){
+							type=1;
+						}
+						if(dandoux2-70==teki2x&&dandouy2==teki2y){
+							type=2;
+						}
+						if(dandoux2-70==teki3x&&dandouy2==teki3y){
+							type=3;
+						}
+						if(dandoux2-70==teki4x&&dandouy2==teki4y){
+							type=4;
+						}
+						if(handan==2)
+			 			g2.drawImage(danl,x+i*(-70),y,70,70,mainwindow);
+						else{
+							if(i==1){dandoux=2170;dandouy=1415;}
+							break;
+						}
 			 			dandoux=x+i*(-70);
 			 			dandouy=y;
 			 			dandoux2=dandoux;
@@ -704,47 +1619,135 @@ public class Chap3Main extends JFrame {
 							y = y % 730;						
 							y+=30;
 						}
-			 			g2.drawImage(ak,x+i*70,y,70,70,mainwindow);
+						if(i==1){
+						dandoux2=x;
+			 			dandouy2=y;
+			 		//	System.out.println(dandoux2+" "+dandouy2);
+						}
+			 			if(kaidan==0){
+						switch(MAPnow){
+						case 1:handan = i1.mapbnk(dandoux2+70,dandouy2);break;
+						case 2:handan = i2.mapbnk(dandoux2+70,dandouy2);break;
+						case 3:handan = i3.mapbnk(dandoux2+70,dandouy2);break;
+						case 4:handan = i4.mapbnk(dandoux2+70,dandouy2);break;
+						case 5:handan = i5.mapbnk(dandoux2+70,dandouy2);break;
+						case 6:handan = i6.mapbnk(dandoux2+70,dandouy2);break;
+						case 7:handan = i7.mapbnk(dandoux2+70,dandouy2);break;
+						case 8:handan = i8.mapbnk(dandoux2+70,dandouy2);break;
+						case 9:handan = i9.mapbnk(dandoux2+70,dandouy2);break;
+						}}else if(kaidan==1){
+							switch(MAPnow){
+							case 1:handan = i10.mapbnk(dandoux2+70,dandouy2);break;
+							case 2:handan = i20.mapbnk(dandoux2+70,dandouy2);break;
+							case 3:handan = i30.mapbnk(dandoux2+70,dandouy2);break;
+							case 4:handan = i40.mapbnk(dandoux2+70,dandouy2);break;
+							case 5:handan = i50.mapbnk(dandoux2+70,dandouy2);break;
+							case 6:handan = i60.mapbnk(dandoux2+70,dandouy2);break;
+							case 7:handan = i70.mapbnk(dandoux2+70,dandouy2);break;
+							case 8:handan = i80.mapbnk(dandoux2+70,dandouy2);break;
+							case 9:handan = i90.mapbnk(dandoux2+70,dandouy2);break;
+							}
+						}else if(kaidan==2){
+							handan = iBOSS.mapbnk(dandoux2+70,dandouy2);
+						}
+			 			
+					//	System.out.println("MAPnow "+x+"handan "+y);
+						if(handan==2)
+			 			g2.drawImage(danr,x+i*70,y,70,70,mainwindow);
+						else{
+							if(i==1){dandoux=2170;dandouy=1415;}
+							break;
+						}
 			 			dandoux=x+i*70;
 			 			dandouy=y;
 			 			dandoux2=dandoux;
 			 			dandouy2=dandouy;
 			 			break;
 			 		}
-			 		try{Thread.sleep(30);}catch(InterruptedException e){}
+			 		Graphics m3 = mainwindow.getGraphics();
+			 		try{Thread.sleep(50);}catch(InterruptedException e){}
+			 		if(handan!=2)break;
+			 		
 			 		mapmake remap = new mapmake();
-					remap.mapmk(dandoux, dandouy,dandoux2,dandouy2,MAPnow,0,1);
-			/**************************** ダメージ判定 ******************************/
-			 		if(tekix==dandoux&&tekiy==dandouy){	
-			 			Graphics m3 = mainwindow.getGraphics();
-			 			iv.damege(1);
-						iv.paint(m3,2,type);
+			 	//	System.out.println("マプナオシチェック");
+					remap.mapmk(dandoux, dandouy,dandoux2,dandouy2,MAPnow,0,1,0);
+				//	System.out.println("dandou"+dandoux2+ " dandouy "+dandouy2);
+					
+					if((tekix==dandoux2&&tekiy==dandouy2)||(teki2x==dandoux2&&teki2y==dandouy2)||(teki3x==dandoux2&&teki3y==dandouy2)||(teki4x==dandoux2&&teki4y==dandouy2)){		
+						if(tekix==dandoux2&&tekiy==dandouy2){
+							teki t =new teki();
+							type=1;
+							iv.paint(m3,2,type,kaidan,1,t.tstetus);
+							iv.ex(m3,type,kaidan);
+						}
+						else if(teki2x==dandoux2&&teki2y==dandouy2){
+							teki t2 =new teki2();
+							type=2;
+							iv.paint(m3,2,type,kaidan,1,t2.tstetus);
+							iv.ex(m3,type,kaidan);
+						}
+						else if(teki3x==dandoux2&&teki3y==dandouy2){
+							teki t3 =new teki3();
+							type=3;
+							iv.paint(m3,2,type,kaidan,1,t3.tstetus);
+							iv.ex(m3,type,kaidan);
+						}
+						else if(teki4x==dandoux2&&teki4y==dandouy2){
+							teki t4 =new teki4();
+							type=4;
+							iv.paint(m3,2,type,kaidan,1,t4.tstetus);
+							iv.ex(m3,type,kaidan);
+						}
 						break;
 			 		}
 			 	}
 			 }
-	  }
-	
-	 /**************** マップメイククラス ******************/
+		void Attack_sord(int x,int y,int muki,int MAPnow,int kaidan){
+			int hkx=x,hky=y;
+			
+			switch(muki){
+			case 1:hky-=70;break;
+			case 2:hky+=70;break;
+			case 3:hkx-=70;break;
+			case 4:hkx+=70;break;
+				
+			}
+			int y3 = y;	
+			hkx = hkx % 700;
+			if(y3 >= 1430){
+				hky = hky % 1430;
+				hky+=30;
+			}
+			else if(y3 >= 730){
+				hky = hky % 730;
+				hky+=30;
+			}
+			
+				Graphics g2 = mainwindow.getGraphics();
+				g2.drawImage(sord1,hkx,hky,70,70,mainwindow);
+				try{Thread.sleep(100);}catch(InterruptedException e){}
+				g2.drawImage(move,hkx,hky,70,70,mainwindow);
+				g2.drawImage(sord2,hkx,hky,70,70,mainwindow);
+				try{Thread.sleep(100);}catch(InterruptedException e){}
+				g2.drawImage(move,hkx,hky,70,70,mainwindow);
+				g2.drawImage(sord3,hkx,hky,70,70,mainwindow);
+				try{Thread.sleep(100);}catch(InterruptedException e){}
+				mapmake remap = new mapmake();
+				remap.mapmk(hkx, hky,hkx,hky,MAPnow,0,1,0);
+		}
+	  }//class Attack
+ 
 class mapmake{
 	Graphics g = mainwindow.getGraphics();
-	BufferedImage img_back;
-	void mapmk(int x,int y,int x2,int y2,int MAPnow,int tekihandan,int remap){
+	BufferedImage img_back,img_back_under;
+	void mapmk(int x,int y,int x2,int y2,int MAPnow,int tekihandan,int remap,int kaidan){
 		maphandan mapmap = new maphandan();
 		
 		int kamex = mapmap.maphndn(x2, y2);
+		if(tekihandan==1)kamex=MAPnow;
 		
-		bunki11 i1 = new bunki11();
-		bunki12 i2 = new bunki12();
-		bunki13 i3 = new bunki13();
-		bunki14 i4 = new bunki14();
-		bunki15 i5 = new bunki15();
-		bunki16 i6 = new bunki16();
-		bunki17 i7 = new bunki17();
-		bunki18 i8 = new bunki18();
-		bunki19 i9 = new bunki19();
-	
 		int part = 0;
+		if(kaidan==0){
 		switch(kamex){
 		case 1:part = i1.mapbnk(x,y);break;
 		case 2:part = i2.mapbnk(x,y);break;
@@ -756,214 +1759,506 @@ class mapmake{
 		case 8:part = i8.mapbnk(x,y);break;
 		case 9:part = i9.mapbnk(x,y);break;
 		}
-		if(remap==1)part=2;
-		System.out.println("mapmake"+kamex);
+		}else if(kaidan==1){
+			switch(kamex){
+			case 1:part = i10.mapbnk(x,y);break;
+			case 2:part = i20.mapbnk(x,y);break;
+			case 3:part = i30.mapbnk(x,y);break;
+			case 4:part = i40.mapbnk(x,y);break;
+			case 5:part = i50.mapbnk(x,y);break;
+			case 6:part = i60.mapbnk(x,y);break;
+			case 7:part = i70.mapbnk(x,y);break;
+			case 8:part = i80.mapbnk(x,y);break;
+			case 9:part = i90.mapbnk(x,y);break;
+			}
+		}else if(kaidan==2){
+			part = iBOSS.mapbnk(x,y);
+		}
+		if(remap==1){
+			part=2;
+		}
+
 		switch(part){
 		case 0:
-			try{
-				this.img_back = ImageIO.read(this.getClass().getResource
-						("歩行可能パネル１.gif"));
-			}catch(IOException e){
-			e.printStackTrace();
-			}
+			g.drawImage(move,x,y,70,70,mainwindow);
 			break;
 			
 		case 1:
-			try{
-				this.img_back = ImageIO.read(this.getClass().getResource
-						("歩行不可能パネル１.gif"));
-			}catch(IOException e){
-			e.printStackTrace();
-			}
+			g.drawImage(nomove,x,y,70,70,mainwindow);
 			break;
 		case 2:
-			try{
-				this.img_back = ImageIO.read(this.getClass().getResource
-						("歩行可能パネル１.gif"));
-			}catch(IOException e){
-			e.printStackTrace();
-			}
+			g.drawImage(move,x,y,70,70,mainwindow);
 			break;
+		
+	    case 3:
+	    	g.drawImage(move,x,y,70,70,mainwindow);
+	    	g.drawImage(Hrec,x,y,50,50,mainwindow);
+		    break;
+	
+         case 4:
+        	 g.drawImage(move,x,y,70,70,mainwindow);
+ 	    	g.drawImage(Grec,x,y,50,50,mainwindow);
+        	 break;
+
+         case 5:
+        	 g.drawImage(move,x,y,70,70,mainwindow);
+ 	    	g.drawImage(HASIGO,x,y,70,70,mainwindow);
+        	 break;
+         case 6:
+        	 g.drawImage(move,x,y,70,70,mainwindow);
+  	    	g.drawImage(HASIGO,x,y,70,70,mainwindow);
+         	 break;
+         case 7:
+        	 g.drawImage(move,x,y,70,70,mainwindow);
+  	    	g.drawImage(tuta,x,y,70,70,mainwindow);
+  	    
+         	 break;
+         case 8:
+        	 g.drawImage(ana,x,y,70,70,mainwindow);
+       	    
+         	 break;
+         case 9:
+        	 g.drawImage(move,x,y,70,70,mainwindow);
+ 			break;
+         case 10:
+        	 g.drawImage(move,x,y,70,70,mainwindow);
+  	    	g.drawImage(Key,x,y,70,70,mainwindow);
+         	 break;
+         case 11:
+        	 g.drawImage(move,x,y,70,70,mainwindow);
+  	    	g.drawImage(HASIGO,x,y,70,70,mainwindow);
+         	 break;
+         case 12:
+        	 g.drawImage(move,x,y,70,70,mainwindow);
+  	    	g.drawImage(Keria,x,y,70,70,mainwindow);
+         	 break;
+         case 13:
+        	 g.drawImage(move,x,y,70,70,mainwindow);
+  	    	g.drawImage(bur,x,y,70,70,mainwindow);
+         	 break;
 		}
-		g.drawImage(img_back,x,y,70,70,mainwindow);
-	}
-}
-
-	/**************** 敵行動クラス ****************/
-public class teki {
-	 BufferedImage img_back,chara;
-	 
-		 void a(int x,int y,int x2,int y2,int cp,int MAPnow){
-			int muki = 0;
-			int y4=y,x4=x;
-			
-			try{	
-				switch(cp){
-				case 1:this.chara = ImageIO.read(this.getClass().getResource
-						("敵1裏.gif"));
-							break;
-				case 2:this.chara = ImageIO.read(this.getClass().getResource
-						("敵1.gif"));
-						break;
-				case 3:this.chara = ImageIO.read(this.getClass().getResource
-						("敵1裏.gif"));
-							break;
-				case 4:this.chara = ImageIO.read(this.getClass().getResource
-						("敵1.gif"));
-						break;	
-					}
-				}catch(IOException e){
-				e.printStackTrace();
-				}
-			
-			Graphics g1 = mainwindow.getGraphics();
-
-			int y3 = y;	
-			x = x % 700;
-			x2 = x2 % 700;
-			
-			if(y3 >= 1430){
-				y = y % 1430;
-				y2 = y2 % 1430;
-				y+=30;
-				y2+=30;
-			}
-			else if(y3 >= 730){
-				y = y % 730;
-				y2 = y2 % 730;
-				y+=30;
-				y2+=30;
-			}
-			
-				
-			g1.drawImage(chara,x,y,70,70,mainwindow);
-			
-			mapmake remap = new mapmake();
-			remap.mapmk(x2, y2,x4,y4,MAPnow,1,1);
-		}
-	}
-}
-/******************** マップ **********************/
-class bunki11 extends bunkimoto{
-	bunki11(){
-	map = new int[][]{{1,1,1,1,1,1,1,1,1,1},
-					   {1,1,1,1,1,1,1,1,1,1},
-					   {1,1,2,2,2,2,2,1,1,1},
-					   {1,1,2,2,2,2,2,1,1,1},
-					   {1,1,2,2,2,2,2,2,2,2},
-					   {2,2,2,2,2,2,2,2,2,2},
-					   {1,1,2,2,2,2,2,2,1,1},
-					   {1,1,2,2,2,2,2,2,1,1},
-					   {1,1,2,2,2,2,2,2,1,1},
-					   {1,1,1,2,2,2,2,1,1,1}};
-	}
-}
-class bunki12 extends bunkimoto{
-	bunki12(){
-	map = new int[][]{{1,1,1,1,1,1,1,1,1,1},
-					   {1,1,1,1,1,1,2,1,2,1},
-					   {1,1,1,1,1,1,1,1,1,1},
-					   {1,1,1,2,2,2,2,2,1,1},
-					   {2,1,2,2,2,2,2,2,2,2},
-					   {2,2,2,2,2,2,2,2,2,2},
-					   {1,2,2,2,2,2,2,1,1,1},
-					   {1,1,1,2,2,2,2,1,1,1},
-					   {1,2,1,2,2,2,2,1,2,1},
-					   {1,1,1,2,2,2,2,1,1,1}};
-	}
-}class bunki13 extends bunkimoto{
-	bunki13(){
-	map = new int[][]{{1,1,1,1,1,1,1,1,1,1},
-					   {1,1,1,1,1,1,1,1,1,1},
-					   {1,1,2,2,1,1,1,1,1,1},
-					   {1,1,2,2,1,1,2,1,1,1},
-					   {2,1,2,2,1,1,2,1,1,1},
-					   {2,2,2,2,2,2,2,1,1,1},
-					   {1,2,2,2,2,2,2,1,1,1},
-					   {1,1,1,1,1,2,2,1,1,1},
-					   {1,1,1,1,2,2,2,1,1,1},
-					   {1,1,1,1,2,2,1,1,1,1}};
-	}
-}class bunki14 extends bunkimoto{
-	bunki14(){
-	map = new int[][]{{1,1,1,2,2,2,2,1,1,1},
-					   {1,1,1,1,2,2,1,1,1,1},
-					   {1,1,2,2,2,2,2,2,1,1},
-					   {1,1,2,2,2,2,2,2,1,1},
-					   {1,1,2,2,2,2,2,2,2,2},
-					   {1,1,2,2,2,2,2,2,2,2},
-					   {1,1,2,2,2,2,2,2,1,1},
-					   {1,1,2,2,2,2,2,2,1,1},
-					   {1,1,2,2,2,2,2,2,1,1},
-					   {1,1,1,2,2,2,2,1,1,1}};
-	}
-}class bunki15 extends bunkimoto{
-	bunki15(){
-	map = new int[][]{{1,1,1,2,2,2,2,1,1,1},
-					   {1,1,1,1,2,2,1,1,1,1},
-					   {1,1,2,2,2,2,2,2,1,1},
-					   {1,1,2,2,2,2,2,2,1,1},
-					   {2,1,2,1,1,1,1,2,2,2},
-					   {2,2,2,1,1,1,1,2,2,2},
-					   {1,2,2,1,1,2,2,2,1,1},
-					   {1,1,2,2,2,2,2,2,1,1},
-					   {1,1,2,2,2,2,2,2,1,1},
-					   {1,1,1,2,2,2,2,1,1,1}};
-	}
-}class bunki16 extends bunkimoto{
-	bunki16(){
-	map = new int[][]{{1,1,1,1,2,2,1,1,1,1},
-					   {1,1,1,1,2,2,1,1,1,1},
-					   {1,1,2,2,2,2,2,2,1,1},
-					   {1,1,2,2,2,2,2,2,1,1},
-					   {2,1,2,2,2,1,2,1,1,1},
-					   {2,2,2,2,2,2,2,2,1,1},
-					   {1,2,2,2,2,2,2,2,1,1},
-					   {1,1,2,2,2,1,2,1,1,1},
-					   {1,1,2,2,2,2,2,2,1,1},
-					   {1,1,1,2,2,2,2,1,1,1}};
-	}
-}class bunki17 extends bunkimoto{
-	bunki17(){
-	map = new int[][]{{1,1,1,2,2,2,2,1,1,1},
-					   {1,1,1,1,2,2,1,1,1,1},
-					   {1,1,2,2,2,2,2,2,1,1},
-					   {1,1,2,2,2,2,2,2,1,1},
-					   {1,1,2,2,2,2,2,2,2,2},
-					   {1,1,2,2,2,2,2,2,2,2},
-					   {1,1,2,2,2,2,2,2,1,1},
-					   {1,1,2,2,2,2,2,2,1,1},
-					   {1,1,2,2,2,2,2,2,1,1},
-					   {1,1,1,1,1,1,1,1,1,1}};
-	}
-}class bunki18 extends bunkimoto{
-	bunki18(){
-	map = new int[][]{{1,1,1,2,2,2,2,1,1,1},
-					   {1,1,1,1,2,2,1,1,1,1},
-					   {1,1,2,2,2,2,2,2,1,1},
-					   {1,1,2,2,2,2,2,2,1,1},
-					   {2,1,2,2,2,2,2,2,2,2},
-					   {2,2,2,2,2,2,2,2,2,2},
-					   {1,2,2,2,2,2,2,2,1,1},
-					   {1,1,2,2,2,2,2,2,1,1},
-					   {1,1,2,2,2,2,2,2,1,1},
-					   {1,1,1,1,1,1,1,1,1,1}};
-	}
-}class bunki19 extends bunkimoto{
-	bunki19(){
-	map = new int[][]{{1,1,1,2,2,2,2,1,1,1},
-					   {1,1,1,1,2,2,1,1,1,1},
-					   {1,1,2,2,2,2,2,2,1,1},
-					   {1,1,2,2,2,2,2,2,1,1},
-					   {2,1,2,2,2,2,2,2,2,1},
-					   {2,2,2,2,2,2,2,2,2,1},
-					   {1,2,2,2,2,2,2,2,1,1},
-					   {1,1,2,2,2,2,2,2,1,1},
-					   {1,1,2,2,2,2,2,2,1,1},
-					   {1,1,1,1,1,1,1,1,1,1}};
-	}
-}
-
 
 	
+		
+	}
+}//class mapmake
+public class teki {
+	
+	 int dandoux,dandouy;
+	 int dandoux2,dandouy2;
+	 
+	 int[] tstetus= new int[5];
+	 int tekie=0;
+	 {tstetus[0]=iv.seizon[1];			//1:生存 0:死亡
+	  tstetus[1]=5;			//lv
+	  tstetus[2]=iv.thp[1]; //hp
+	  tstetus[3]=10*iv.lv;		//ak
+	  tstetus[4]=10*iv.lv;		//def
+	 }
+	 
+	 void a(int x,int y,int x2,int y2,int cp,int MAPnow,int Myx, int Myy,int kaidan){
+			
+			int y4=y,x4=x;
+			int handan=0;
+
+			Graphics g1 = mainwindow.getGraphics();
+			
+			if(y2==690)y2=660;
+			switch(cp){
+			case 1:g1.drawImage(tekif,x,y,70,70,mainwindow);
+						break;
+			case 2:g1.drawImage(tekib,x,y,70,70,mainwindow);
+					break;
+			case 3:g1.drawImage(tekif,x,y,70,70,mainwindow);
+						break;
+			case 4:g1.drawImage(tekib,x,y,70,70,mainwindow);
+					break;	
+					
+				}
+			
+			//System.out.println("tekimuki  "+ cp+" x "+ x+" y "+y);
+			mapmake remap = new mapmake();
+			if(x==x2&&y==y2){}
+			else
+			remap.mapmk(x2, y2,x4,y4,MAPnow,1,1,0);
+			
+
+		}
+		 void tekiA(int x,int y,int muki,int MAPnow,int Myx,int Myy,int kaidan,int teki2x,int teki2y,
+				 	int teki3x,int teki3y,int teki4x,int teki4y,int MyHP){
+				int x2 = x;
+				int y2 = y;
+				int handan = 0;
+				 
+				 Graphics g2 = mainwindow.getGraphics();
+					
+				 	for(int i = 1;i < 7;i++){
+				 		switch(muki){
+				 		case 1:
+				 			
+				 			int y3 = y;	
+							x = x % 700;
+							
+							
+							if(y3 >= 1430){
+								y = y % 1430;	
+								y+=30;	
+							}
+							else if(y3 >= 730){
+								y = y % 730;						
+								y+=30;
+							}
+							if(i==1){
+								dandoux2=x;
+					 			dandouy2=y;
+					 	//		System.out.println(dandoux2+" "+dandouy2);
+								}
+							if(kaidan==0){
+								switch(MAPnow){
+								case 1:handan = i1.mapbnk(dandoux2,dandouy2-70);break;
+								case 2:handan = i2.mapbnk(dandoux2,dandouy2-70);break;
+								case 3:handan = i3.mapbnk(dandoux2,dandouy2-70);break;
+								case 4:handan = i4.mapbnk(dandoux2,dandouy2-70);break;
+								case 5:handan = i5.mapbnk(dandoux2,dandouy2-70);break;
+								case 6:handan = i6.mapbnk(dandoux2,dandouy2-70);break;
+								case 7:handan = i7.mapbnk(dandoux2,dandouy2-70);break;
+								case 8:handan = i8.mapbnk(dandoux2,dandouy2-70);break;
+								case 9:handan = i9.mapbnk(dandoux2,dandouy2-70);break;
+								}
+							}else if(kaidan==1){
+								switch(MAPnow){
+								case 1:handan = i10.mapbnk(dandoux2,dandouy2-70);break;
+								case 2:handan = i20.mapbnk(dandoux2,dandouy2-70);break;
+								case 3:handan = i30.mapbnk(dandoux2,dandouy2-70);break;
+								case 4:handan = i40.mapbnk(dandoux2,dandouy2-70);break;
+								case 5:handan = i50.mapbnk(dandoux2,dandouy2-70);break;
+								case 6:handan = i60.mapbnk(dandoux2,dandouy2-70);break;
+								case 7:handan = i70.mapbnk(dandoux2,dandouy2-70);break;
+								case 8:handan = i80.mapbnk(dandoux2,dandouy2-70);break;
+								case 9:handan = i90.mapbnk(dandoux2,dandouy2-70);break;
+								}
+							}else if(kaidan==2){
+								handan = iBOSS.mapbnk(dandoux2,dandouy2-70);
+							}
+						//	System.out.println("MAPnow "+MAPnow+"handan "+handan);
+							
+							if(dandoux2==Myx&&dandouy2-70==Myy){
+								tekie=1;
+								iv.hidame(tstetus,g2,HP,mainwindow);
+					 			iv.paint(g2,3,0,kaidan,0,tstetus);
+								break;
+							}
+							if((dandoux2==teki2x&&dandouy2-70==teki2y)||(dandoux2==teki3x&&dandouy2-70==teki3y)||(dandoux2==teki4x&&dandouy2-70==teki4y)){
+								tekie=2;
+								break;
+							}
+							if(handan==2){
+				 			g2.drawImage(dana,x,y+i*(-70),70,70,mainwindow);
+							}else{
+							//	if(i==1){dandoux=2170;dandouy=1415;}
+								break;
+							}
+				 			
+				 			dandoux=x;
+				 			dandouy=y+i*(-70);
+				 			dandoux2=dandoux;
+				 			dandouy2=dandouy;
+				 			break;
+				 		case 2:
+				 			int y4 = y;	
+							x = x % 700;
+
+							if(y4 >= 1430){
+								y = y % 1430;	
+								y+=30;	
+							}
+							else if(y4 >= 730){
+								y = y % 730;						
+								y+=30;
+							}
+							if(i==1){
+								dandoux2=x;
+					 			dandouy2=y;
+					 	//		System.out.println(dandoux2+" "+dandouy2);
+								}
+							if(kaidan==0){
+								switch(MAPnow){
+								case 1:handan = i1.mapbnk(dandoux2,dandouy2+70);break;
+								case 2:handan = i2.mapbnk(dandoux2,dandouy2+70);break;
+								case 3:handan = i3.mapbnk(dandoux2,dandouy2+70);break;
+								case 4:handan = i4.mapbnk(dandoux2,dandouy2+70);break;
+								case 5:handan = i5.mapbnk(dandoux2,dandouy2+70);break;
+								case 6:handan = i6.mapbnk(dandoux2,dandouy2+70);break;
+								case 7:handan = i7.mapbnk(dandoux2,dandouy2+70);break;
+								case 8:handan = i8.mapbnk(dandoux2,dandouy2+70);break;
+								case 9:handan = i9.mapbnk(dandoux2,dandouy2+70);break;
+								}
+								}else if(kaidan==1){
+									switch(MAPnow){
+									case 1:handan = i10.mapbnk(dandoux2,dandouy2+70);break;
+									case 2:handan = i20.mapbnk(dandoux2,dandouy2+70);break;
+									case 3:handan = i30.mapbnk(dandoux2,dandouy2+70);break;
+									case 4:handan = i40.mapbnk(dandoux2,dandouy2+70);break;
+									case 5:handan = i50.mapbnk(dandoux2,dandouy2+70);break;
+									case 6:handan = i60.mapbnk(dandoux2,dandouy2+70);break;
+									case 7:handan = i70.mapbnk(dandoux2,dandouy2+70);break;
+									case 8:handan = i80.mapbnk(dandoux2,dandouy2+70);break;
+									case 9:handan = i90.mapbnk(dandoux2,dandouy2+70);break;
+									}
+								}else if(kaidan==2){
+									handan = iBOSS.mapbnk(dandoux2,dandouy2+70);
+								}
+					//		System.out.println("MAPnow "+MAPnow+"handan "+handan);
+							if(dandoux2==Myx&&dandouy2+70==Myy){
+								tekie=1;
+								iv.hidame(tstetus,g2,HP,mainwindow);
+					 			iv.paint(g2,3,0,kaidan,0,tstetus);
+								break;
+							}
+							if((dandoux2==teki2x&&dandouy2+70==teki2y)||(dandoux2==teki3x&&dandouy2+70==teki3y)||(dandoux2==teki4x&&dandouy2+70==teki4y)){
+								tekie=2;
+								break;
+							}
+							if(handan==2)
+				 			g2.drawImage(danu,x,y+i*70,70,70,mainwindow);
+							else{
+								//if(i==1){dandoux=2170;dandouy=1415;}
+								break;
+							}
+							
+				 			dandoux=x;
+				 			dandouy=y+i*70;
+				 			dandoux2=dandoux;
+				 			dandouy2=dandouy;
+				 			break;
+				 		case 3:
+				 			
+				 			int y5 = y;	
+							x = x % 700;
+							
+							
+							if(y5 >= 1430){
+								y = y % 1430;	
+								y+=30;	
+							}
+							else if(y5 >= 730){
+								y = y % 730;						
+								y+=30;
+							}
+							if(i==1){
+								dandoux2=x;
+					 			dandouy2=y;
+					// 			System.out.println(dandoux2+" "+dandouy2);
+								}
+							if(kaidan==0){
+							switch(MAPnow){
+							case 1:handan = i1.mapbnk(dandoux2-70,dandouy2);break;
+							case 2:handan = i2.mapbnk(dandoux2-70,dandouy2);break;
+							case 3:handan = i3.mapbnk(dandoux2-70,dandouy2);break;
+							case 4:handan = i4.mapbnk(dandoux2-70,dandouy2);break;
+							case 5:handan = i5.mapbnk(dandoux2-70,dandouy2);break;
+							case 6:handan = i6.mapbnk(dandoux2-70,dandouy2);break;
+							case 7:handan = i7.mapbnk(dandoux2-70,dandouy2);break;
+							case 8:handan = i8.mapbnk(dandoux2-70,dandouy2);break;
+							case 9:handan = i9.mapbnk(dandoux2-70,dandouy2);break;
+							}
+							}else if(kaidan==1){
+								switch(MAPnow){
+								case 1:handan = i10.mapbnk(dandoux2-70,dandouy2);break;
+								case 2:handan = i20.mapbnk(dandoux2-70,dandouy2);break;
+								case 3:handan = i30.mapbnk(dandoux2-70,dandouy2);break;
+								case 4:handan = i40.mapbnk(dandoux2-70,dandouy2);break;
+								case 5:handan = i50.mapbnk(dandoux2-70,dandouy2);break;
+								case 6:handan = i60.mapbnk(dandoux2-70,dandouy2);break;
+								case 7:handan = i70.mapbnk(dandoux2-70,dandouy2);break;
+								case 8:handan = i80.mapbnk(dandoux2-70,dandouy2);break;
+								case 9:handan = i90.mapbnk(dandoux2-70,dandouy2);break;
+								}
+							}else if(kaidan==2){
+								handan = iBOSS.mapbnk(dandoux2-70,dandouy2);
+							}
+							if((dandoux2-70==teki2x&&dandouy2==teki2y)||(dandoux2-70==teki3x&&dandouy2==teki3y)||(dandoux2-70==teki4x&&dandouy2==teki4y)){
+								tekie=2;
+								break;
+							}
+						//	System.out.println("MAPnow "+MAPnow+"handan "+handan);
+							if(dandoux2-70==Myx&&dandouy2==Myy){
+								tekie=1;
+								iv.hidame(tstetus,g2,HP,mainwindow);
+					 			iv.paint(g2,3,0,kaidan,0,tstetus);
+								break;
+							}
+							if(handan==2)
+				 			g2.drawImage(danl,x+i*(-70),y,70,70,mainwindow);
+							else{
+							//	if(i==1){dandoux=2170;dandouy=1415;}
+								break;
+							}
+				 			dandoux=x+i*(-70);
+				 			dandouy=y;
+				 			dandoux2=dandoux;
+				 			dandouy2=dandouy;
+				 			break;
+				 		case 4:		
+				 			int y6 = y;	
+							x = x % 700;
+						if(y6 >= 1430){
+								y = y % 1430;	
+								y+=30;	
+							}
+							else if(y6 >= 730){
+								y = y % 730;						
+								y+=30;
+							}
+							if(i==1){
+							dandoux2=x;
+				 			dandouy2=y;
+				 		//	System.out.println(dandoux2+" "+dandouy2);
+							}
+				 			
+							if(kaidan==0){
+								switch(MAPnow){
+								case 1:handan = i1.mapbnk(dandoux2+70,dandouy2);break;
+								case 2:handan = i2.mapbnk(dandoux2+70,dandouy2);break;
+								case 3:handan = i3.mapbnk(dandoux2+70,dandouy2);break;
+								case 4:handan = i4.mapbnk(dandoux2+70,dandouy2);break;
+								case 5:handan = i5.mapbnk(dandoux2+70,dandouy2);break;
+								case 6:handan = i6.mapbnk(dandoux2+70,dandouy2);break;
+								case 7:handan = i7.mapbnk(dandoux2+70,dandouy2);break;
+								case 8:handan = i8.mapbnk(dandoux2+70,dandouy2);break;
+								case 9:handan = i9.mapbnk(dandoux2+70,dandouy2);break;
+								}}else if(kaidan==1){
+									switch(MAPnow){
+									case 1:handan = i10.mapbnk(dandoux2+70,dandouy2);break;
+									case 2:handan = i20.mapbnk(dandoux2+70,dandouy2);break;
+									case 3:handan = i30.mapbnk(dandoux2+70,dandouy2);break;
+									case 4:handan = i40.mapbnk(dandoux2+70,dandouy2);break;
+									case 5:handan = i50.mapbnk(dandoux2+70,dandouy2);break;
+									case 6:handan = i60.mapbnk(dandoux2+70,dandouy2);break;
+									case 7:handan = i70.mapbnk(dandoux2+70,dandouy2);break;
+									case 8:handan = i80.mapbnk(dandoux2+70,dandouy2);break;
+									case 9:handan = i90.mapbnk(dandoux2+70,dandouy2);break;
+									}
+								}else if(kaidan==2){
+									handan = iBOSS.mapbnk(dandoux2+70,dandouy2);
+								}
+							if((dandoux2+70==teki2x&&dandouy2==teki2y)||(dandoux2+70==teki3x&&dandouy2==teki3y)||(dandoux2+70==teki4x&&dandouy2==teki4y)){
+								tekie=2;
+								break;
+							}
+						//	System.out.println("MAPnow "+x+"handan "+y);
+							if(dandoux2+70==Myx&&dandouy2==Myy){
+								tekie=1;
+								iv.hidame(tstetus,g2,HP,mainwindow);
+					 			iv.paint(g2,3,0,kaidan,0,tstetus);
+								break;
+							}
+							if(dandoux2+70==700){
+								break;
+							}
+							if(handan==2)
+				 			g2.drawImage(danr,x+i*70,y,70,70,mainwindow);
+							else{
+								//if(i==1){dandoux=2170;dandouy=1415;}
+								break;
+							}
+				 			dandoux=x+i*70;
+				 			dandouy=y;
+				 			dandoux2=dandoux;
+				 			dandouy2=dandouy;
+				 			break;
+				 		}
+				 		try{Thread.sleep(30);}catch(InterruptedException e){}
+				 		
+				 		if((i==1&&tekie==1)||(i==1&&handan!=2)||(i==1&&tekie==2)){
+				 			dandoux=6000;
+				 			dandouy=6000;
+				 		}
+				 		mapmake remap = new mapmake();
+						remap.mapmk(dandoux, dandouy,dandoux2,dandouy2,MAPnow,0,1,0);
+						
+						//System.out.println("i= "+i+" dandoux "+dandoux+" dandouy "+dandouy);
+						if(handan!=2)return;
+				 		if(tekie==1){
+				 			return;
+				 		}
+				 		if(tekie==2){
+				 			return;
+				 		}
+				 	}
+				 }//void tekiA
+			 
+		 }//class teki
+class teki2 extends teki{
+	{tstetus[0]=iv.seizon[2];			//1:生存 0:死亡
+	  tstetus[1]=5;			//lv
+	  tstetus[2]=iv.thp[1]; //hp
+	  tstetus[3]=8;		//ak
+	  tstetus[4]=8;		//def
+	 }
+}
+class teki3 extends teki{
+	{tstetus[0]=iv.seizon[3];			//1:生存 0:死亡
+	  tstetus[1]=5;			//lv
+	  tstetus[2]=iv.thp[2]; //hp
+	  tstetus[3]=14;		//ak
+	  tstetus[4]=14;		//def
+	 }
+}
+class teki4 extends teki{
+	{tstetus[0]=iv.seizon[4];			//1:生存 0:死亡
+	  tstetus[1]=3;			//lv
+	  tstetus[2]=iv.thp[3]; //hp
+	  tstetus[3]=11;		//ak
+	  tstetus[4]=9;		//def
+	 }
+}
+
+	class Repaint{
+		void repaint(int x, int y, int MAPnow,int kaidan){
+			mapmake map = new mapmake();
+			
+			for(mapy=30;mapy <=  730-70;mapy+=70){
+				for(mapx=0;mapx <=  700-70;mapx+=70){	
+					map.mapmk(mapx,mapy,x,y,MAPnow,0,0,kaidan);
+				}
+			}
+		}
+	}
+	public class WindowListenerTest extends Frame implements WindowListener {
+	    
+	    public void windowOpened(WindowEvent e) {       // 開かれた
+	        System.out.println("windowOpened");
+	    }
+	    public void windowClosing(WindowEvent e) {      // 閉じられている
+	        System.out.println("windowClosing");
+	    }
+	    public void windowClosed(WindowEvent e) {       // 閉じた
+	        System.out.println("windowClosed");
+	        System.exit(0);
+	    }
+	    public void windowIconified(WindowEvent e) {    // アイコン化された
+	        System.out.println("windowIconified");
+	        System.exit(0);
+	        
+	    }
+	    public void windowDeiconified(WindowEvent e) {  // 非アイコン化された
+	        System.out.println("windowDeiconified");
+	        Repaint paint = new Repaint();
+			paint.repaint(0,0,0,3);
+	    }
+	    public void windowActivated(WindowEvent e) {    // アクティブになった
+	        System.out.println("windowActivated");
+	     
+	    }
+	    public void windowDeactivated(WindowEvent e) {  // 非アクティブになった
+	        System.out.println("windowDeactivated");
+	        //System.exit(0);
+	    }
+	    
+	}
+}//CHAp3Main
+
+
+
 
